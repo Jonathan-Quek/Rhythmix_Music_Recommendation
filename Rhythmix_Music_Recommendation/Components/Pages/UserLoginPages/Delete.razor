@@ -18,28 +18,12 @@
     }
     else {
         <dl class="row">
-            <dt class="col-sm-2">Name</dt>
-            <dd class="col-sm-10">@userlogin.Name</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">CreatedAt</dt>
-            <dd class="col-sm-10">@userlogin.CreatedAt</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">UpdatedAt</dt>
-            <dd class="col-sm-10">@userlogin.UpdatedAt</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">CreatedBy</dt>
-            <dd class="col-sm-10">@userlogin.CreatedBy</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">UpdatedBy</dt>
-            <dd class="col-sm-10">@userlogin.UpdatedBy</dd>
+            <dt class="col-sm-2">Userame</dt>
+            <dd class="col-sm-10">@userlogin.Username</dd>
+            <dd class="col-sm-10">@userlogin.Password</dd>
         </dl>
         <EditForm method="post" Model="userlogin" OnValidSubmit="DeleteUserLogin" FormName="delete" Enhance>
             <button type="submit" class="btn btn-danger" disabled="@(userlogin is null)">Delete</button> |
-            <a href="/userlogins">Back to List</a>
         </EditForm>
     }
 </div>

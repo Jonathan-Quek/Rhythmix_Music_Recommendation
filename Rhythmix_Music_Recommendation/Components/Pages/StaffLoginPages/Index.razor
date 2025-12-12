@@ -16,10 +16,7 @@
 
 <QuickGrid Class="table" Items="context.StaffLogin">
     <PropertyColumn Property="stafflogin => stafflogin.Name" />
-    <PropertyColumn Property="stafflogin => stafflogin.CreatedAt" />
-    <PropertyColumn Property="stafflogin => stafflogin.UpdatedAt" />
-    <PropertyColumn Property="stafflogin => stafflogin.CreatedBy" />
-    <PropertyColumn Property="stafflogin => stafflogin.UpdatedBy" />
+    <PropertyColumn Property="stafflogin => stafflogin.Password" />
 
     <TemplateColumn Context="stafflogin">
         <a href="@($"stafflogins/edit?id={stafflogin.Id}")">Edit</a> |

@@ -23,39 +23,26 @@ else
                 <ValidationSummary role="alert"/>
                 <input type="hidden" name="UserRegister.Id" value="@UserRegister.Id" />
                 <div class="mb-3">
-                    <label for="name" class="form-label">Name:</label>
-                    <InputText id="name" @bind-Value="UserRegister.Name" class="form-control" />
-                    <ValidationMessage For="() => UserRegister.Name" class="text-danger" />
+                    <label for="username" class="form-label">Userame:</label>
+                    <InputText id="username" @bind-Value="UserRegister.Username" class="form-control" />
+                    <ValidationMessage For="() => UserRegister.Username" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="createdat" class="form-label">CreatedAt:</label>
-                    <InputDate id="createdat" @bind-Value="UserRegister.CreatedAt" class="form-control" />
-                    <ValidationMessage For="() => UserRegister.CreatedAt" class="text-danger" />
+                    <label for="password" class="form-label">Password:</label>
+                    <InputText id="password" @bind-Value="UserRegister.Password" class="form-control" />
+                    <ValidationMessage For="() => UserRegister.Password" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="updatedat" class="form-label">UpdatedAt:</label>
-                    <InputDate id="updatedat" @bind-Value="UserRegister.UpdatedAt" class="form-control" />
-                    <ValidationMessage For="() => UserRegister.UpdatedAt" class="text-danger" />
+                    <label for="email" class="form-label">Email:</label>
+                    <InputText id="email" @bind-Value="UserRegister.Email" class="form-control" />
+                    <ValidationMessage For="() => UserRegister.Email" class="text-danger" />
                 </div>
-                <div class="mb-3">
-                    <label for="createdby" class="form-label">CreatedBy:</label>
-                    <InputText id="createdby" @bind-Value="UserRegister.CreatedBy" class="form-control" />
-                    <ValidationMessage For="() => UserRegister.CreatedBy" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="updatedby" class="form-label">UpdatedBy:</label>
-                    <InputText id="updatedby" @bind-Value="UserRegister.UpdatedBy" class="form-control" />
-                    <ValidationMessage For="() => UserRegister.UpdatedBy" class="text-danger" />
-                </div>
+
                 <button type="submit" class="btn btn-primary">Save</button>
             </EditForm>
         </div>
     </div>
 }
-
-<div>
-    <a href="/userregisters">Back to List</a>
-</div>
 
 @code {
     [SupplyParameterFromQuery]
