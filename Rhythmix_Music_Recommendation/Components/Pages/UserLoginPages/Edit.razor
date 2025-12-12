@@ -1,0 +1,109 @@
+﻿@page "/userlogins/edit"
+@using Microsoft.EntityFrameworkCore
+@using Rhythmix_Music_Recommendation.Components.Domain
+@inject IDbContextFactory<Rhythmix_Music_Recommendation.Data.Rhythmix_Music_RecommendationContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>UserLogin</h2>
+<hr />
+@if (UserLogin is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="UserLogin" OnValidSubmit="UpdateUserLogin" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="UserLogin.Id" value="@UserLogin.Id" />
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <InputText id="name" @bind-Value="UserLogin.Name" class="form-control" />
+                    <ValidationMessage For="() => UserLogin.Name" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="createdat" class="form-label">CreatedAt:</label>
+                    <InputDate id="createdat" @bind-Value="UserLogin.CreatedAt" class="form-control" />
+                    <ValidationMessage For="() => UserLogin.CreatedAt" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="updatedat" class="form-label">UpdatedAt:</label>
+                    <InputDate id="updatedat" @bind-Value="UserLogin.UpdatedAt" class="form-control" />
+                    <ValidationMessage For="() => UserLogin.UpdatedAt" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="createdby" class="form-label">CreatedBy:</label>
+                    <InputText id="createdby" @bind-Value="UserLogin.CreatedBy" class="form-control" />
+                    <ValidationMessage For="() => UserLogin.CreatedBy" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="updatedby" class="form-label">UpdatedBy:</label>
+                    <InputText id="updatedby" @bind-Value="UserLogin.UpdatedBy" class="form-control" />
+                    <ValidationMessage For="() => UserLogin.UpdatedBy" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/userlogins">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private UserLogin? UserLogin { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        UserLogin ??= await context.UserLogin.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (UserLogin is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateUserLogin()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(UserLogin!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!UserLoginExists(UserLogin!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/userlogins");
+    }
+
+    private bool UserLoginExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.UserLogin.Any(e => e.Id == id);
+    }
+}

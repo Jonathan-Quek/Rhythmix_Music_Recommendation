@@ -1,5 +1,7 @@
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Georgia', 'Times New Roman', Times, serif;
+    background-color: #fff;
+    color: black;
 }
 
 a, .btn-link {
@@ -42,10 +44,81 @@ h1:focus {
     color: white;
 }
 
-    .blazor-error-boundary::after {
-        content: "An error has occurred."
-    }
+.blazor-error-boundary::after {
+    content: "An error has occurred."
+}
 
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
+}
+
+.top-navbar-container {
+}
+
+.main-top-nav-list {
+    display: flex !important;
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    align-items: center !important;
+}
+
+.separated-right-group {
+    margin-left: auto !important;
+}
+
+.main-top-nav-list .nav-item:nth-child(2) {
+    padding-left: 15px;
+}
+
+.main-top-nav-list .nav-item {
+    display: block;
+    padding: 0 15px;
+    white-space: nowrap;
+    align-self: center !important;
+}
+
+.brand-item .nav-link {
+    font-weight: bold !important;
+    font-size: 1.2rem !important;
+    padding-left: 15px !important; 
+}
+
+.main-top-nav-list .nav-link span {
+    color: white !important;
+    font-weight: 600;
+    padding: 10px 0;
+    text-decoration: none;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    vertical-align: middle !important;
+    position: relative;
+    top: -1px;
+}
+
+.main-top-nav-list .nav-link.active {
+    background-color: transparent !important;
+    color: #ffd700 !important;
+}
+
+.page {
+    display: block !important;
+}
+
+.page .top-row {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    background-image: none !important;
+    background-color: transparent !important;
+    height: auto !important;
+    width: 100% !important;
+}
+
+.top-row.navbar-dark {
+    background-color: #333333 !important;
+    color: white !important;
+}
+
+0-ull-width-nav {
+    background-color: #333333 !important;
+    color: white !important;
 }

@@ -1,0 +1,64 @@
+﻿@page "/userregisters/create"
+@using Microsoft.EntityFrameworkCore
+@using Rhythmix_Music_Recommendation.Components.Domain
+@inject IDbContextFactory<Rhythmix_Music_Recommendation.Data.Rhythmix_Music_RecommendationContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>UserRegister</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="UserRegister" OnValidSubmit="AddUserRegister" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label> 
+                <InputText id="name" @bind-Value="UserRegister.Name" class="form-control" /> 
+                <ValidationMessage For="() => UserRegister.Name" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="createdat" class="form-label">CreatedAt:</label> 
+                <InputDate id="createdat" @bind-Value="UserRegister.CreatedAt" class="form-control" /> 
+                <ValidationMessage For="() => UserRegister.CreatedAt" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="updatedat" class="form-label">UpdatedAt:</label> 
+                <InputDate id="updatedat" @bind-Value="UserRegister.UpdatedAt" class="form-control" /> 
+                <ValidationMessage For="() => UserRegister.UpdatedAt" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="createdby" class="form-label">CreatedBy:</label> 
+                <InputText id="createdby" @bind-Value="UserRegister.CreatedBy" class="form-control" /> 
+                <ValidationMessage For="() => UserRegister.CreatedBy" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="updatedby" class="form-label">UpdatedBy:</label> 
+                <InputText id="updatedby" @bind-Value="UserRegister.UpdatedBy" class="form-control" /> 
+                <ValidationMessage For="() => UserRegister.UpdatedBy" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/userregisters">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private UserRegister UserRegister { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddUserRegister()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.UserRegister.Add(UserRegister);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/userregisters");
+    }
+}

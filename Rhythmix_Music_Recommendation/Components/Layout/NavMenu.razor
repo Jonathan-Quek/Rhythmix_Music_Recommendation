@@ -1,30 +1,39 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Rhythmix_Music_Recommendation</a>
+    <div class="top-row full-width-nav">
+        <ul class="main-top-nav-list">
+
+            <li class="nav-item brand-item">
+            <NavLink class="nav-link" href="">
+                Rhythmix_Music_Recommendation
+            </NavLink>
+            </li>
+
+            <li class="nav-item">
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                </NavLink>
+            </li>
+
+            <li class="nav-item separated-right-group">
+                <NavLink class="nav-link" href="userregister">
+                    <span class="bi bi-person-add" aria-hidden="true"></span> UserRegister
+                </NavLink>
+            </li>
+
+            <li class="nav-item">
+                <NavLink class="nav-link" href="userlogin">
+                    <span class="bi bi-person-fill-lock" aria-hidden="true"></span> UserLogin
+                </NavLink>
+            </li>
+
+            <li class="nav-item">
+                <NavLink class="nav-link" href="stafflogin">
+                    <span class="bi bi-shield-lock-fill" aria-hidden="true"></span> StaffLogin
+                </NavLink>
+            </li>
+
+        </ul>
+
     </div>
-</div>
-
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
-
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
-    </nav>
 </div>
 

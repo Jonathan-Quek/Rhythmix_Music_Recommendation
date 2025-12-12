@@ -1,0 +1,40 @@
+﻿@page "/userregisters"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Rhythmix_Music_Recommendation.Components.Domain
+@using Rhythmix_Music_Recommendation.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<Rhythmix_Music_Recommendation.Data.Rhythmix_Music_RecommendationContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="userregisters/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.UserRegister">
+    <PropertyColumn Property="userregister => userregister.Name" />
+    <PropertyColumn Property="userregister => userregister.CreatedAt" />
+    <PropertyColumn Property="userregister => userregister.UpdatedAt" />
+    <PropertyColumn Property="userregister => userregister.CreatedBy" />
+    <PropertyColumn Property="userregister => userregister.UpdatedBy" />
+
+    <TemplateColumn Context="userregister">
+        <a href="@($"userregisters/edit?id={userregister.Id}")">Edit</a> |
+        <a href="@($"userregisters/details?id={userregister.Id}")">Details</a> |
+        <a href="@($"userregisters/delete?id={userregister.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private Rhythmix_Music_RecommendationContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

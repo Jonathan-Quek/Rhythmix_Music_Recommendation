@@ -1,0 +1,54 @@
+﻿@page "/userregisters/details"
+@using Microsoft.EntityFrameworkCore
+@using Rhythmix_Music_Recommendation.Components.Domain
+@inject IDbContextFactory<Rhythmix_Music_Recommendation.Data.Rhythmix_Music_RecommendationContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>UserRegister</h2>
+    <hr />
+    @if (userregister is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Name</dt>
+            <dd class="col-sm-10">@userregister.Name</dd>
+            <dt class="col-sm-2">CreatedAt</dt>
+            <dd class="col-sm-10">@userregister.CreatedAt</dd>
+            <dt class="col-sm-2">UpdatedAt</dt>
+            <dd class="col-sm-10">@userregister.UpdatedAt</dd>
+            <dt class="col-sm-2">CreatedBy</dt>
+            <dd class="col-sm-10">@userregister.CreatedBy</dd>
+            <dt class="col-sm-2">UpdatedBy</dt>
+            <dd class="col-sm-10">@userregister.UpdatedBy</dd>
+        </dl>
+        <div>
+            <a href="@($"/userregisters/edit?id={userregister.Id}")">Edit</a> |
+            <a href="@($"/userregisters")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private UserRegister? userregister;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        userregister = await context.UserRegister.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (userregister is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}
