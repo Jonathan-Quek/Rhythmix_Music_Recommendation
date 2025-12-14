@@ -39,9 +39,6 @@ namespace Rhythmix_Music_Recommendation.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -51,18 +48,6 @@ namespace Rhythmix_Music_Recommendation.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("StaffLogin");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2025, 12, 14, 17, 56, 16, 655, DateTimeKind.Local).AddTicks(4323),
-                            CreatedBy = "System",
-                            Name = "Zong Han",
-                            Password = "admin123",
-                            UpdatedAt = new DateTime(2025, 12, 14, 17, 56, 16, 655, DateTimeKind.Local).AddTicks(4342),
-                            UpdatedBy = "System"
-                        });
                 });
 
             modelBuilder.Entity("Rhythmix_Music_Recommendation.Components.Domain.UserLogin", b =>
@@ -128,19 +113,6 @@ namespace Rhythmix_Music_Recommendation.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("UserRegister");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2025, 12, 14, 17, 56, 16, 655, DateTimeKind.Local).AddTicks(5228),
-                            CreatedBy = "System",
-                            Email = "Jonathan@Quek.ZhiYong",
-                            Password = "password1",
-                            UpdatedAt = new DateTime(2025, 12, 14, 17, 56, 16, 655, DateTimeKind.Local).AddTicks(5236),
-                            UpdatedBy = "System",
-                            Username = "Jonathan"
-                        });
                 });
 #pragma warning restore 612, 618
         }
