@@ -1,40 +1,65 @@
-﻿@implements IDisposable
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@implements IDisposable
 @inject NavigationManager NavigationManager
+
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="top-row full-width-nav">
-        <ul class="main-top-nav-list">
 
-            <li class="nav-item brand-item">
-            <NavLink class="nav-link" href="">
-                Rhythmix_Music_Recommendation
-            </NavLink>
-            </li>
+<ul class="main-top-nav-list">
+    <li class="nav-item brand-item">
+        <NavLink class="nav-link" href="">
+            Rhythmix_Music_Recommendation
+        </NavLink>
+    </li>
 
-            <li class="nav-item">
-                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                    <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-                </NavLink>
-            </li>
+    <li class="nav-item">
+        <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+            <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+        </NavLink>
+    </li>
 
-            <li class="nav-item separated-right-group">
-                <NavLink class="nav-link" href="Account/Register">
-                    <span class="bi bi-person-add" aria-hidden="true"></span> UserRegister
-                </NavLink>
-            </li>
+    
 
-            <li class="nav-item">
-                <NavLink class="nav-link" href="Account/Login">
-                    <span class="bi bi-person-fill-lock" aria-hidden="true"></span> UserLogin
-                </NavLink>
-            </li>
+    <AuthorizeView>
+                <Authorized>
+                    <li class="nav-item">
+                        <form action="Account/Logout" method="post">
+                            <AntiforgeryToken />
+                            <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                            <button type="submit" class="nav-link btn btn-link p-0">
+                                <span class="bi bi-box-arrow-right"></span> Logout
+                            </button>
+                        </form>
+                    </li>
+                    <div class="nav-item px-3">
+                        <NavLink span class="nav-link">
+                            <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
+                        </NavLink>
+                    </div>
 
-            <li class="nav-item">
-                <NavLink class="nav-link" href="stafflogins/create">
-                    <span class="bi bi-shield-lock-fill" aria-hidden="true"></span> StaffLogin
-                </NavLink>
-            </li>
+                </Authorized>
+        <NotAuthorized>
+                    <li class="nav-item separated-right-group">
+                        <NavLink class="nav-link" href="Account/Register">
+                            <span class="bi bi-person-add" aria-hidden="true"></span> UserRegister
+                        </NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="Account/Login">
+                            <span class="bi bi-person-fill-lock" aria-hidden="true"></span> UserLogin
+                        </NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="stafflogins/create">
+                            <span class="bi bi-shield-lock-fill" aria-hidden="true"></span> StaffLogin
+                        </NavLink>
+                    </li>
+        </NotAuthorized>
+    </AuthorizeView>
 
-        </ul>
+    
+</ul>
+
 
     </div>
 </div>

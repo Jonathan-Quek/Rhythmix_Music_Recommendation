@@ -34,6 +34,7 @@ builder.Services.AddAuthentication(options =>
     .AddIdentityCookies();
 
 builder.Services.AddIdentityCore<Rhythmix_Music_RecommendationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<Rhythmix_Music_RecommendationContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();
