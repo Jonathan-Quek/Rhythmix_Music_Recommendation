@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Rhythmix_Music_Recommendation.Configurations;
 using Rhythmix_Music_Recommendation.Configurations.Entities;
 using Rhythmix_Music_Recommendation.Data;
 
@@ -21,6 +22,12 @@ namespace Rhythmix_Music_Recommendation.Data
             builder.ApplyConfiguration(new StaffSeed());
 
             builder.ApplyConfiguration(new UserSeed());
+
+            builder.ApplyConfiguration(new RoleSeed());
+
+            builder.ApplyConfiguration(new UserRoleSeed());
+
+            builder.ApplyConfiguration(new WorkingUserSeed());
         }
     }
 } // Rhythmix_Music_RecommendationContext
