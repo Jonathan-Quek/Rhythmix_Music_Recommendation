@@ -28,7 +28,7 @@ namespace Rhythmix_Music_Recommendation.Configurations
                 {
                     Id = "b1a1f4c2-4f5e-4d3b-9c3a-1e2f3a4b5c6d",
                     Email = "test@mail.com",
-                    NormalizedEmail = "JONATHAN@MAIL.COM",
+                    NormalizedEmail = "TEST@MAIL.COM",
                     FirstName = "John",
                     LastName = "Doe",
                     UserName = "test@mail.com",
