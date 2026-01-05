@@ -27,12 +27,12 @@ namespace Rhythmix_Music_Recommendation.Configurations
                 new Rhythmix_Music_RecommendationUser
                 {
                     Id = "b1a1f4c2-4f5e-4d3b-9c3a-1e2f3a4b5c6d",
-                    Email = "jonathan@mail.com",
+                    Email = "test@mail.com",
                     NormalizedEmail = "JONATHAN@MAIL.COM",
-                    FirstName = "Jonathan",
-                    LastName = "Quek",
-                    UserName = "JonQuek",
-                    NormalizedUserName = "JONQUEK",
+                    FirstName = "John",
+                    LastName = "Doe",
+                    UserName = "test@mail.com",
+                    NormalizedUserName = "TEST@MAIL.COM",
                     PasswordHash = hasher.HashPassword(null, "P@ssword1"),
                     EmailConfirmed = true
 

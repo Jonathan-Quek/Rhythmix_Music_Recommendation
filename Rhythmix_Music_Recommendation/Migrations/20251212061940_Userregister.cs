@@ -37,6 +37,8 @@ namespace Rhythmix_Music_Recommendation.Migrations
                 table: "UserLogin",
                 type: "nvarchar(max)",
                 nullable: true);
+
+
         }
 
         /// <inheritdoc />

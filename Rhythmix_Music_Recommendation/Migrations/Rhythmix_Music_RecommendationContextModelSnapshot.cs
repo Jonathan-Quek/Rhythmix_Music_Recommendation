@@ -209,7 +209,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("StaffLogin");
+                    b.ToTable("StaffLogin", (string)null);
 
                     b.HasData(
                         new
@@ -252,7 +252,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserLogin");
+                    b.ToTable("UserLogin", (string)null);
                 });
 
             modelBuilder.Entity("Rhythmix_Music_Recommendation.Components.Domain.UserRegister", b =>
@@ -286,7 +286,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserRegister");
+                    b.ToTable("UserRegister", (string)null);
 
                     b.HasData(
                         new
