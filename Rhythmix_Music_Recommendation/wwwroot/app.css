@@ -122,3 +122,6 @@ h1:focus {
     background-color: #333333 !important;
     color: white !important;
 }
+.page main {
+    padding-top: 110px !important; /* Forces content to start below the 90px nav */
+}

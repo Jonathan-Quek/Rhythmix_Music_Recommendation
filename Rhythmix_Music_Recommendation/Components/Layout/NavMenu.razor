@@ -2,70 +2,64 @@
 @implements IDisposable
 @inject NavigationManager NavigationManager
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="top-row full-width-nav">
+<div class="horizontal-nav-bar">
+    <div class="nav-content">
+        <div class="nav-brand">
+            <NavLink href="" class="logo-wrapper">
+                <span class="bi bi-vinyl-fill logo-icon" aria-hidden="true"></span>
+                <span class="logo-text">Rhythmix</span>
+            </NavLink>
+        </div>
 
-<ul class="main-top-nav-list">
-    <li class="nav-item brand-item">
-        <NavLink class="nav-link" href="">
-            Rhythmix_Music_Recommendation
-        </NavLink>
-    </li>
+        <ul class="nav-links-list">
+            <li class="nav-item">
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <span class="bi bi-house-door-fill" aria-hidden="true"></span> Home
+                </NavLink>
+            </li>
 
-    <li class="nav-item">
-        <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-            <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-        </NavLink>
-    </li>
-
-    
-
-    <AuthorizeView>
+            <AuthorizeView>
                 <Authorized>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="profile">
+                            <span class="bi bi-person-fill" aria-hidden="true"></span> @context.User.Identity?.Name
+                        </NavLink>
+                    </li>
                     <li class="nav-item">
                         <form action="Account/Logout" method="post">
                             <AntiforgeryToken />
                             <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                            <button type="submit" class="nav-link btn btn-link p-0">
+                            <button type="submit" class="nav-link logout-btn">
                                 <span class="bi bi-box-arrow-right"></span> Logout
                             </button>
                         </form>
                     </li>
-                    <div class="nav-item px-3">
-                        <NavLink span class="nav-link">
-                            <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
-                        </NavLink>
-                    </div>
-
                 </Authorized>
-        <NotAuthorized>
-                    <li class="nav-item separated-right-group">
+                <NotAuthorized>
+                    <li class="nav-item">
                         <NavLink class="nav-link" href="Account/Register">
-                            <span class="bi bi-person-add" aria-hidden="true"></span> UserRegister
+                            <span class="bi bi-person-add" aria-hidden="true"></span> Register
                         </NavLink>
                     </li>
                     <li class="nav-item">
                         <NavLink class="nav-link" href="Account/Login">
-                            <span class="bi bi-person-fill-lock" aria-hidden="true"></span> UserLogin
+                            <span class="bi bi-person-fill-lock" aria-hidden="true"></span> Login
                         </NavLink>
                     </li>
                     <li class="nav-item">
                         <NavLink class="nav-link" href="/StaffPlaceholder">
-                            <span class="bi bi-shield-lock-fill" aria-hidden="true"></span> StaffLogin
+                            <span class="bi bi-shield-lock-fill" aria-hidden="true"></span> Staff
                         </NavLink>
                     </li>
-        </NotAuthorized>
-    </AuthorizeView>
-
-    
-</ul>
-
-
+                </NotAuthorized>
+            </AuthorizeView>
+        </ul>
     </div>
 </div>
 
 @code {
     private string? currentUrl;
+
     protected override void OnInitialized()
     {
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
@@ -82,5 +76,4 @@
     {
         NavigationManager.LocationChanged -= OnLocationChanged;
     }
-
 }
