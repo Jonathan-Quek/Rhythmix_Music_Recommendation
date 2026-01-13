@@ -22,18 +22,21 @@ namespace Rhythmix_Music_Recommendation.Data
             client.DefaultRequestHeaders.UserAgent.ParseAdd(
                 "SMSS/1.0 (jonathanquek14@hotmail.com)"
             );
+
+            var lim = 1;
+
             var genreSeeds = new Dictionary<string, int>
             {
-                {"Pop", 20},
-                {"Rock", 20},
-                {"Hip-Hop", 20},
-                {"Country", 20},
-                {"Jazz", 20},
-                {"Classical", 20},
-                {"Electronic", 20},
-                {"R&B", 20},
-                {"Reggae", 20},
-                {"Metal", 20}
+                {"Pop", lim},
+                {"Rock", lim},
+                {"Hip-Hop", lim},
+                {"Country", lim},
+                {"Jazz", lim},
+                {"Classical", lim},
+                {"Electronic", lim},
+                {"R&B", lim},
+                {"Reggae", lim},
+                {"Metal", lim}
             };
 
 
@@ -45,64 +48,64 @@ namespace Rhythmix_Music_Recommendation.Data
                 int limit = seed.Value;
 
 
-                var url =
-                    "http://musicbrainz.org/ws/2/recording/?" +
-                    $"query=tag:{genre}&limit={limit}&fmt=json&inc=releases";
+               
+                    var url = $"http://musicbrainz.org/ws/2/release/?query=tag:{genre}&limit={limit}&fmt=json";
+                    var response = await client.GetStringAsync(url);
+                    using var doc = JsonDocument.Parse(response);
+                    var releases = doc.RootElement.GetProperty("releases");
 
-                var response = await client.GetStringAsync(url);
-
-                using var doc = JsonDocument.Parse(response);
-                var recordings = doc.RootElement.GetProperty("recordings");
-
-                foreach (var r in recordings.EnumerateArray())
-                {
-                    int? releaseYear = null;
-
-                    if (r.TryGetProperty("first-release-date", out var dateProp))
+                    foreach (var release in releases.EnumerateArray())
                     {
-                        var dateString = dateProp.GetString();
+                        var albumId = release.GetProperty("id").GetString();
+                        var albumTitle = release.GetProperty("title").GetString();
+                        var releaseYear = release.TryGetProperty("date", out var dateProp) && dateProp.GetString()?.Length >= 4
+                            ? int.Parse(dateProp.GetString().Substring(0, 4))
+                            : (int?)null;
+                        var artist = release.GetProperty("artist-credit")[0].GetProperty("name").GetString();
+                        var coverUrl = $"https://coverartarchive.org/release/{albumId}/front";
 
-                        if (!string.IsNullOrEmpty(dateString) &&
-                            dateString.Length >= 4 &&
-                            int.TryParse(dateString.Substring(0, 4), out int year))
+                        // Fetch tracks for this album
+                        var tracksUrl = $"http://musicbrainz.org/ws/2/recording?release={albumId}&fmt=json&inc=artist-credits";
+                        var tracksResponse = await client.GetStringAsync(tracksUrl);
+                        using var tracksDoc = JsonDocument.Parse(tracksResponse);
+                        var recordings = tracksDoc.RootElement.GetProperty("recordings");
+
+                        var album = new Album
                         {
-                            releaseYear = year;
+                            MusicBrainzId = albumId,
+                            Title = albumTitle,
+                            Artist = artist,
+                            CoverImageUrl = coverUrl,
+                            ReleaseYear = releaseYear
+                        };
+
+                        foreach (var r in recordings.EnumerateArray())
+                        {
+                            var songTitle = r.GetProperty("title").GetString();
+                       
+
+                            var song = new Song
+                            {
+                                MusicBrainzId = r.GetProperty("id").GetString(),
+                                Title = songTitle,
+                                Artist = r.GetProperty("artist-credit")[0].GetProperty("name").GetString(),
+                                Genre = genre,
+                                ReleaseYear = releaseYear,
+                                CoverImageUrl = coverUrl,
+                                Album = album
+                            };
+                            album.Songs.Add(song);
                         }
+
+                      
+                            context.Albums.Add(album);
+                           
+
+                        
                     }
 
-                    string? coverUrl = null;
-
-                    if (r.TryGetProperty("releases", out var releases) &&
-                        releases.GetArrayLength() > 0)
-                    {
-                        var releaseId = releases[0].GetProperty("id").GetString();
-                        coverUrl = $"https://coverartarchive.org/release/{releaseId}/front";
-                    }
-
-                    var album = releases.GetArrayLength() > 0
-                                    ? releases[0].GetProperty("title").GetString()
-                                    : null;
-
-                    var song = new Song
-                    {
-                        MusicBrainzId = r.GetProperty("id").GetString(),
-                        Title = r.GetProperty("title").GetString(),
-                        Artist = r.GetProperty("artist-credit")[0]
-                                    .GetProperty("name").GetString(),
-                        Genre = genre,
-                        ReleaseYear = releaseYear,
-                        Album = album,
-                        CoverImageUrl = coverUrl
-                    };
-
-                    // Skip songs with title "[untitled]" (case-insensitive)
-                    if (!string.Equals(song.Title, "[untitled]", StringComparison.OrdinalIgnoreCase))
-                    {
-                        context.Songs.Add(song);
-                    }
-                }
-
-                await Task.Delay(1000); // Respectful delay between requests
+                    await Task.Delay(1000);
+              
             }
             await context.SaveChangesAsync();
 

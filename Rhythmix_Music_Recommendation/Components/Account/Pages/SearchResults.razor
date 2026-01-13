@@ -14,66 +14,91 @@
 
 <h2>Search Results</h2>
 
-@if (searchResults.Any())
+<div>
+
+    <input class="form-control"
+           placeholder="Search by title, artist, genre, album, or year"
+           @bind="searchInput"
+           @bind:event="oninput" />
+
+    <button class="btn btn-primary mt-2" @onclick="OnSearch" style="border-radius: 16px;">
+        Search
+    </button>
+
+
+</div>
+
+
+
+<div class="search-filters mt-2">
+    <button class="filter-btn @(selectedMode == SearchMode.Songs ? "active" : "")"
+            @onclick="() => selectedMode = SearchMode.Songs">
+        Song
+    </button>
+
+    <button class="filter-btn @(selectedMode == SearchMode.Albums ? "active" : "")"
+            @onclick="() => selectedMode = SearchMode.Albums">
+        Albums
+    </button>
+
+    <button class="filter-btn @(selectedMode == SearchMode.Artists ? "active" : "")"
+            @onclick="() => selectedMode = SearchMode.Artists">
+        Artists
+    </button>
+</div>
+
+
+@if (selectedMode == SearchMode.Songs && songResults.Any())
 {
-    @* <div> *@
-
-    @*     <div class="col-main">Title / Artist</div> *@
-    @*     <div class="col-meta">Genre</div> *@
-    @*     <div class="col-meta">Album</div> *@
-    @*     <div class="col-right">Year</div> *@
-
-    @* </div> *@
-
-    <div>
-
-        <input class="form-control"
-        placeholder="Search by title, artist, genre, album, or year"
-        @bind="searchInput"
-        @bind:event="oninput" />
-
-        <button class="btn btn-primary mt-2" @onclick="OnSearch" sstyle="border-radius: 16px;">
-            Search
-        </button>
-
-
-    </div>
-
-
-
-    <!-- Rows -->
-
     <div class="songlist">
-
-        @foreach (var song in searchResults)
+        @foreach (var song in songResults)
         {
-
             <div class="songrow" title="@($"{song.Title} - {song.Artist}")">
-
-
-
                 <img src="@song.CoverImageUrl"
                      alt="@song.Title"
                      style="width:128px;height:128px;object-fit:cover;border-radius:8px;"
-                     onerror="this.onerror=null;this.src='/images/Placeholder_Image.jpg';"/>
-
-
+                     onerror="this.onerror=null;this.src='/images/Placeholder_Image.jpg';" />
 
                 <div class="col-main">
                     <strong>@song.Title</strong>
                     <div class="artist">@song.Artist</div>
-
                     <div class="col-meta genre">@song.Genre</div>
                     <div class="col-meta album">@song.Album</div>
                     <div class="col-right year">@song.ReleaseYear</div>
                 </div>
-
             </div>
         }
-
-
     </div>
+}
+else if (selectedMode == SearchMode.Albums && albumResults.Any())
+{
+    @foreach (var album in albumResults)
+    {
+        <div class="songrow">
+            <img src="@album.CoverImageUrl"
+                 alt="@album.Title"
+                 style="width:128px;height:128px;object-fit:cover;border-radius:8px;"
+                 onerror="this.onerror=null;this.src='/images/Placeholder_Image.jpg';" />
 
+            <div class="col-main">
+                <strong>@album.Title</strong>
+                <div class="artist">@album.Artist</div>
+                <div class="col-right year">@album.ReleaseYear</div>
+            </div>
+        </div>
+    }
+}
+else if (selectedMode == SearchMode.Artists && artistResults.Any())
+{
+    @foreach (var artist in artistResults)
+    {
+        <div class="songrow">
+            <div class="col-main">
+                <strong>@artist.Artist</strong>
+                <div class="col-meta genre">@artist.Genre</div>
+            </div>
+        </div>
+    }
 }
 else
 {
@@ -84,6 +109,13 @@ else
 
 
 @code {
+
+    enum SearchMode
+    {
+        Songs,
+        Albums,
+        Artists
+    }
 
     private async Task<string> GetSafeCoverSrcAsync(string? url)
     {
@@ -118,7 +150,8 @@ else
     {
         // Update the query parameter in the URL, which will trigger OnParametersSet
         var encoded = Uri.EscapeDataString(searchInput);
-        NavigationManager.NavigateTo($"/results?query={encoded}");
+        var filter = selectedMode.ToString();
+        NavigationManager.NavigateTo($"/results?query={encoded}&mode={filter}");
     }
 
 
@@ -126,32 +159,115 @@ else
 
     [SupplyParameterFromQuery]
     public string? query { get; set; }
+    [SupplyParameterFromQuery]
+    public string? mode { get; set; }
 
-    private List<Song> searchResults = new();
+
+    private string searchTerm = "";
+    private SearchMode selectedMode = SearchMode.Songs;
+
+    private List<Song> songResults = new();
+    private List<Album> albumResults = new();
+    private List<Song> artistResults = new(); //intended 
 
     protected override void OnParametersSet()
     {
+        searchInput = query ?? string.Empty;
+
+        if (!string.IsNullOrWhiteSpace(mode) &&
+        Enum.TryParse<SearchMode>(mode, out var parsedMode))
+        {
+            selectedMode = parsedMode;
+        }
+
+
         if (string.IsNullOrWhiteSpace(query))
         {
-            searchResults = DbContext.Songs.ToList();
+            songResults = DbContext.Songs.ToList();
+            albumResults = DbContext.Albums.ToList();
             return;
         }
 
         // Trim whitespace from the query
         var q = query.Trim();
 
-
-        searchResults = DbContext.Songs
+        switch (selectedMode)
+        {
+            case SearchMode.Songs:
+                var preFiltered = DbContext.Songs
                     .Where(s =>
                         (s.Title != null && EF.Functions.Like(s.Title, $"%{q}%")) ||
                         (s.Artist != null && EF.Functions.Like(s.Artist, $"%{q}%")) ||
                         (s.Genre != null && EF.Functions.Like(s.Genre, $"%{q}%")) ||
-                        (s.Album != null && EF.Functions.Like(s.Album, $"%{q}%")) ||
+                        (s.Album != null && EF.Functions.Like(s.Album.Title, $"%{q}%")) ||
                         (s.ReleaseYear != null && EF.Functions.Like(s.ReleaseYear.ToString(), $"%{q}%"))
                     )
                     .OrderBy(s => s.Title)
                     .ThenBy(s => s.Artist)
                     .ToList();
 
+
+                songResults = preFiltered
+                    .AsEnumerable()
+                    .Where(s =>
+                        (s.Title?.Split(' ').Any(w => w.StartsWith(q, StringComparison.OrdinalIgnoreCase)) ?? false) ||
+                        (s.Artist?.Split(' ').Any(w => w.StartsWith(q, StringComparison.OrdinalIgnoreCase)) ?? false) ||
+                        (s.Genre?.Split(' ').Any(w => w.StartsWith(q, StringComparison.OrdinalIgnoreCase)) ?? false)
+                    )
+                    .OrderBy(s => s.Title)
+                    .ThenBy(s => s.Artist)
+                    .ToList();
+                break;
+
+
+            case SearchMode.Albums:
+                // Implement album search logic here
+                var preFilteredAlbums = DbContext.Albums
+                    .Where(a =>
+                        (a.Title != null && EF.Functions.Like(a.Title, $"%{q}%")) ||
+                        (a.Artist != null && EF.Functions.Like(a.Artist, $"%{q}%"))
+                    )
+                    .OrderBy(a => a.Title)
+                    .ThenBy(a => a.Artist)
+                    .ToList();
+
+                albumResults = preFilteredAlbums
+                    .AsEnumerable()
+                    .Where(a =>
+                        (a.Title?.Split(' ').Any(w => w.StartsWith(q, StringComparison.OrdinalIgnoreCase)) ?? false) ||
+                        (a.Artist?.Split(' ').Any(w => w.StartsWith(q, StringComparison.OrdinalIgnoreCase)) ?? false)
+                    )
+                    .OrderBy(a => a.Title)
+                    .ThenBy(a => a.Artist)
+                    .ToList();
+                break;
+
+
+            case SearchMode.Artists:
+                // Implement artist search logic here
+                var preFilteredArtists = DbContext.Songs
+                    .Where(s =>
+                        (s.Artist != null && EF.Functions.Like(s.Artist, $"%{q}%")) ||
+                        (s.Genre != null && EF.Functions.Like(s.Genre, $"%{q}%"))
+                    )
+                    .OrderBy(s => s.Artist)
+                    .ThenBy(s => s.Genre)
+                    .ToList();
+
+
+                artistResults = preFilteredArtists
+                    .AsEnumerable()
+                    .Where(s =>
+                        (s.Artist?.Split(' ').Any(w => w.StartsWith(q, StringComparison.OrdinalIgnoreCase)) ?? false) ||
+                        (s.Genre?.Split(' ').Any(w => w.StartsWith(q, StringComparison.OrdinalIgnoreCase)) ?? false)
+                    )
+                    .OrderBy(s => s.Artist)
+                    .ThenBy(s => s.Genre)
+                    .ToList();
+                
+                break;
+        }
     }
+
 }
+

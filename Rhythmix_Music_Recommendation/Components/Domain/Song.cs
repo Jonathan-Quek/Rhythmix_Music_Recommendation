@@ -8,7 +8,8 @@
         public string Artist { get; set; }
         public string Genre { get; set; }
         public int? ReleaseYear { get; set; }
-        public string? Album { get; set; } // Optional field for album name
+        public int AlbumId { get; set; }               // Foreign key to Album
+        public Album Album { get; set; }
         public string? CoverImageUrl { get; set; } // Optional field for cover image URL
     }
 }
