@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Rhythmix_Music_Recommendation.Data;
 
@@ -11,9 +12,11 @@ using Rhythmix_Music_Recommendation.Data;
 namespace Rhythmix_Music_Recommendation.Migrations
 {
     [DbContext(typeof(Rhythmix_Music_RecommendationContext))]
-    partial class Rhythmix_Music_RecommendationContextModelSnapshot : ModelSnapshot
+    [Migration("20260112141557_SeedSongs")]
+    partial class SeedSongs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -219,7 +222,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
                     b.HasIndex("MusicBrainzId")
                         .IsUnique();
 
-                    b.ToTable("Songs", (string)null);
+                    b.ToTable("Songs");
                 });
 
             modelBuilder.Entity("Rhythmix_Music_Recommendation.Components.Domain.StaffLogin", b =>
@@ -250,7 +253,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("StaffLogin", (string)null);
+                    b.ToTable("StaffLogin");
                 });
 
             modelBuilder.Entity("Rhythmix_Music_Recommendation.Components.Domain.UserLogin", b =>
@@ -281,7 +284,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserLogin", (string)null);
+                    b.ToTable("UserLogin");
                 });
 
             modelBuilder.Entity("Rhythmix_Music_Recommendation.Components.Domain.UserRegister", b =>
@@ -315,7 +318,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserRegister", (string)null);
+                    b.ToTable("UserRegister");
                 });
 
             modelBuilder.Entity("Rhythmix_Music_Recommendation.Data.Rhythmix_Music_RecommendationUser", b =>

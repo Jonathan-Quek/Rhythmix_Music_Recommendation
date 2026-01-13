@@ -1,0 +1,157 @@
+﻿@page "/results"
+
+@using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.EntityFrameworkCore
+@using Rhythmix_Music_Recommendation.Components.Domain
+@using Rhythmix_Music_Recommendation.Data
+@using static Rhythmix_Music_Recommendation.Components.Pages.Home
+
+@rendermode InteractiveServer
+
+@inject NavigationManager NavigationManager
+@inject IHttpClientFactory HttpClientFactory
+@inject Rhythmix_Music_RecommendationContext DbContext
+
+<h2>Search Results</h2>
+
+@if (searchResults.Any())
+{
+    @* <div> *@
+
+    @*     <div class="col-main">Title / Artist</div> *@
+    @*     <div class="col-meta">Genre</div> *@
+    @*     <div class="col-meta">Album</div> *@
+    @*     <div class="col-right">Year</div> *@
+
+    @* </div> *@
+
+    <div>
+
+        <input class="form-control"
+        placeholder="Search by title, artist, genre, album, or year"
+        @bind="searchInput"
+        @bind:event="oninput" />
+
+        <button class="btn btn-primary mt-2" @onclick="OnSearch" sstyle="border-radius: 16px;">
+            Search
+        </button>
+
+
+    </div>
+
+
+
+    <!-- Rows -->
+
+    <div class="songlist">
+
+        @foreach (var song in searchResults)
+        {
+
+            <div class="songrow" title="@($"{song.Title} - {song.Artist}")">
+
+
+
+                <img src="@song.CoverImageUrl"
+                     alt="@song.Title"
+                     style="width:128px;height:128px;object-fit:cover;border-radius:8px;"
+                     onerror="this.onerror=null;this.src='/images/Placeholder_Image.jpg';"/>
+
+
+
+                <div class="col-main">
+                    <strong>@song.Title</strong>
+                    <div class="artist">@song.Artist</div>
+
+                    <div class="col-meta genre">@song.Genre</div>
+                    <div class="col-meta album">@song.Album</div>
+                    <div class="col-right year">@song.ReleaseYear</div>
+                </div>
+
+            </div>
+        }
+
+
+    </div>
+
+}
+else
+{
+    <p>No results found.</p>
+}
+
+
+
+
+@code {
+
+    private async Task<string> GetSafeCoverSrcAsync(string? url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            return "images/Placeholder_Image.jpg"; // Local placeholder image
+        }
+        try
+        {
+            var client = HttpClientFactory.CreateClient();
+            var response = await client.GetAsync(url);
+            if (response.IsSuccessStatusCode)
+            {
+                return url;
+            }
+            else
+            {
+                return "images/Placeholder_Image.jpg"; // Local placeholder image
+            }
+        }
+        catch
+        {
+            return "images/Placeholder_Image.jpg"; // Local placeholder image
+        }
+    }
+
+
+
+    private string searchInput = string.Empty;
+
+    private void OnSearch()
+    {
+        // Update the query parameter in the URL, which will trigger OnParametersSet
+        var encoded = Uri.EscapeDataString(searchInput);
+        NavigationManager.NavigateTo($"/results?query={encoded}");
+    }
+
+
+
+
+    [SupplyParameterFromQuery]
+    public string? query { get; set; }
+
+    private List<Song> searchResults = new();
+
+    protected override void OnParametersSet()
+    {
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            searchResults = DbContext.Songs.ToList();
+            return;
+        }
+
+        // Trim whitespace from the query
+        var q = query.Trim();
+
+
+        searchResults = DbContext.Songs
+                    .Where(s =>
+                        (s.Title != null && EF.Functions.Like(s.Title, $"%{q}%")) ||
+                        (s.Artist != null && EF.Functions.Like(s.Artist, $"%{q}%")) ||
+                        (s.Genre != null && EF.Functions.Like(s.Genre, $"%{q}%")) ||
+                        (s.Album != null && EF.Functions.Like(s.Album, $"%{q}%")) ||
+                        (s.ReleaseYear != null && EF.Functions.Like(s.ReleaseYear.ToString(), $"%{q}%"))
+                    )
+                    .OrderBy(s => s.Title)
+                    .ThenBy(s => s.Artist)
+                    .ToList();
+
+    }
+}

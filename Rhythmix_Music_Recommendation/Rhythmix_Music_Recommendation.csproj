@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <Compile Remove="Components\Domain\Register.cs" />
+    <Compile Remove="Migrations\20260112121942_SeedSongs.cs" />
+    <Compile Remove="Migrations\20260112121942_SeedSongs.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +23,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.22" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\images\Placeholder_Image.jpg" />
   </ItemGroup>
 
 </Project>
