@@ -10,6 +10,10 @@
     <Compile Remove="Components\Domain\Register.cs" />
     <Compile Remove="Migrations\20260112121942_SeedSongs.cs" />
     <Compile Remove="Migrations\20260112121942_SeedSongs.Designer.cs" />
+    <Compile Remove="Migrations\20260114021304_AddingPlaylistTable.cs" />
+    <Compile Remove="Migrations\20260114021304_AddingPlaylistTable.Designer.cs" />
+    <Compile Remove="Migrations\20260114024120_AddingPlaylistRelatedTables.cs" />
+    <Compile Remove="Migrations\20260114024120_AddingPlaylistRelatedTables.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

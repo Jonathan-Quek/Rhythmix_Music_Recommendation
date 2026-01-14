@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Rhythmix_Music_Recommendation.Data;
 
@@ -11,9 +12,11 @@ using Rhythmix_Music_Recommendation.Data;
 namespace Rhythmix_Music_Recommendation.Migrations
 {
     [DbContext(typeof(Rhythmix_Music_RecommendationContext))]
-    partial class Rhythmix_Music_RecommendationContextModelSnapshot : ModelSnapshot
+    [Migration("20260114024120_AddingPlaylistRelatedTables")]
+    partial class AddingPlaylistRelatedTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -181,6 +184,21 @@ namespace Rhythmix_Music_Recommendation.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("PlaylistSongs", b =>
+                {
+                    b.Property<int>("PlaylistId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SongId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PlaylistId", "SongId");
+
+                    b.HasIndex("SongId");
+
+                    b.ToTable("PlaylistSongs");
+                });
+
             modelBuilder.Entity("Rhythmix_Music_Recommendation.Components.Domain.Album", b =>
                 {
                     b.Property<int>("AlbumId")
@@ -223,6 +241,10 @@ namespace Rhythmix_Music_Recommendation.Migrations
                     b.Property<string>("CoverImageUrl")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("MusicBrainzId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -230,21 +252,6 @@ namespace Rhythmix_Music_Recommendation.Migrations
                     b.HasKey("PlaylistId");
 
                     b.ToTable("Playlists");
-                });
-
-            modelBuilder.Entity("Rhythmix_Music_Recommendation.Components.Domain.PlaylistSongs", b =>
-                {
-                    b.Property<int>("PlaylistId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SongId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PlaylistId", "SongId");
-
-                    b.HasIndex("SongId");
-
-                    b.ToTable("PlaylistSongs");
                 });
 
             modelBuilder.Entity("Rhythmix_Music_Recommendation.Components.Domain.Song", b =>
@@ -461,7 +468,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "eb1404b8-6556-4193-b794-11fbef6ac0fc",
+                            ConcurrencyStamp = "c4b9eb31-bd38-4667-8945-0df6113016b2",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -469,9 +476,9 @@ namespace Rhythmix_Music_Recommendation.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAELubytJTecKUTeKcO6nDEGEz+r+gd2bRW+vgPwkc4JT81G9WeEWXx1UbTNA8r1tTGg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIFxUUaIUbsraSTRAYko8tqaYO9WFOCVo+17ToS+Z1rz3J0+SSL6u2uM3S+Ym8Tr2Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "56097d04-f093-497a-9845-3c2263b66f18",
+                            SecurityStamp = "e03a6c78-7505-40d1-b0d0-cd6ef033acaf",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         },
@@ -479,7 +486,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
                         {
                             Id = "b1a1f4c2-4f5e-4d3b-9c3a-1e2f3a4b5c6d",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2a05c5d6-c37f-4f07-b279-f510c28990ea",
+                            ConcurrencyStamp = "33972e24-e07f-472b-b098-4d9e7fab686d",
                             Email = "test@mail.com",
                             EmailConfirmed = true,
                             FirstName = "John",
@@ -487,9 +494,9 @@ namespace Rhythmix_Music_Recommendation.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "TEST@MAIL.COM",
                             NormalizedUserName = "TEST@MAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDnJUwcTaL7Am1OxKnkJfEcUtaLiUsyhE0SPPlmr3uLGOzUOqK317O0OxaycxOwFsw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMcY4e10lo6g4mI+45zIKqfIM/FmoMdnGDWkjxszs6a3B3V9GDdPiBu7sBzKJBMRQQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8b79c89e-60ed-4bad-b483-88cd20979802",
+                            SecurityStamp = "4fb11075-736c-4265-9fae-6c8d179d1f1c",
                             TwoFactorEnabled = false,
                             UserName = "test@mail.com"
                         });
@@ -546,7 +553,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Rhythmix_Music_Recommendation.Components.Domain.PlaylistSongs", b =>
+            modelBuilder.Entity("PlaylistSongs", b =>
                 {
                     b.HasOne("Rhythmix_Music_Recommendation.Components.Domain.Playlist", "Playlist")
                         .WithMany("PlaylistSongs")

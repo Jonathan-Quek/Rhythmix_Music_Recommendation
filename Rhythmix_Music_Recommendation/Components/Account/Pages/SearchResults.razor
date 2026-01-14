@@ -63,7 +63,7 @@
                     <strong>@song.Title</strong>
                     <div class="artist">@song.Artist</div>
                     <div class="col-meta genre">@song.Genre</div>
-                    <div class="col-meta album">@song.Album</div>
+                    <div class="col-meta album">@song.Album.Title</div>
                     <div class="col-right year">@song.ReleaseYear</div>
                 </div>
             </div>
@@ -195,6 +195,7 @@ else
         {
             case SearchMode.Songs:
                 var preFiltered = DbContext.Songs
+                    .Include(s => s.Album)
                     .Where(s =>
                         (s.Title != null && EF.Functions.Like(s.Title, $"%{q}%")) ||
                         (s.Artist != null && EF.Functions.Like(s.Artist, $"%{q}%")) ||

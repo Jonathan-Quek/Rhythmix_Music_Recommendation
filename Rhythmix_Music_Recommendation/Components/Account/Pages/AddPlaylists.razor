@@ -1,0 +1,259 @@
+﻿
+@page "/playlists/create"
+@rendermode InteractiveServer
+
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.Forms
+@using Rhythmix_Music_Recommendation.Components.Domain
+@using Rhythmix_Music_Recommendation.Data
+
+@inject Rhythmix_Music_RecommendationContext DbContext
+@inject NavigationManager Nav
+
+<PageTitle>Create Playlist</PageTitle>
+
+<h2>Add/Create Playlists</h2>
+<p class="subtitle">Look up songs to add into this playlist</p>
+
+<!-- Top panel: name, cover, total songs, save -->
+<div class="playlist-panel">
+    <div class="panel-header">
+        <input class="playlist-name-input"
+               placeholder="Playlist name"
+               @bind="playlistName" />
+        <div class="stats">
+            <span class="stat-label">Total Songs:</span>
+            <span class="stat-value">@selectedSongs.Count</span>
+        </div>
+    </div>
+
+    <div class="panel-body">
+        <div class="cover-box">
+            @GetCoverPreviewSrc()
+
+            <div class="upload-row">
+                <InputFile OnChange="HandleImageUpload" accept="image/*" />
+                @if (!string.IsNullOrEmpty(uploadError))
+                {
+                    <div class="error-text">@uploadError</div>
+                }
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn-primary" @onclick="SavePlaylistAsync" disabled="@saving">
+                @if (saving) { <span>Saving…</span> } else { <span>Save Playlist</span> }
+            </button>
+            @if (!string.IsNullOrEmpty(saveMessage))
+            {
+                <div class="save-msg">@saveMessage</div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Search + results (left) | Added Songs (right) -->
+<div class="two-columns">
+    <div class="left-col">
+        <div class="searchbar">
+            <input class="search-input"
+                   placeholder="Filter/search songs"
+                   @bind="searchText"
+                   @bind:event="oninput" />
+            <button class="search-btn" title="Search" @onclick="LoadSongsAsync">🔍</button>
+        </div>
+
+        <div class="list">
+            @if (!songs.Any())
+            {
+                <div class="empty">No songs match your search.</div>
+            }
+            else
+            {
+                @foreach (var s in songs)
+                {
+                    <div class="row">
+                        @GetSongCoverSrc(s)
+                        <div class="text">
+                            <div class="title">@s.Title</div>
+                            <div class="artist">@s.Artist</div>
+                        </div>
+                        <button class="icon-btn" title="Add" @onclick="() => AddSong(s)">➕</button>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="right-col">
+        <h3>Added Songs</h3>
+        <div class="list">
+            @if (!selectedSongs.Any())
+            {
+                <div class="empty">No songs added yet.</div>
+            }
+            else
+            {
+                @foreach (var s in selectedSongs)
+                {
+                    <div class="row">
+                        <img class="thumb"
+                             src="@GetSongCoverSrc(s)"
+                            "title">@s.Title</div>
+                            <div class="artist">@s.Artist</div>
+                        <div>
+                        <button class="icon-btn danger" title="Remove" @onclick="() => RemoveSong(s)">🗑️</button>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    // State
+    private string playlistName = "My Playlist";
+    private string? coverImageUrl;           // final path saved to DB (under /uploads or /images)
+    private IBrowserFile? uploadedImage;     // temp
+    private string uploadError = "";
+    private bool saving = false;
+    private string saveMessage = "";
+
+    private string searchText = "";
+    private List<Song> songs = new();             // left search results
+    private List<Song> selectedSongs = new();     // right added songs
+
+    protected override async Task OnInitializedAsync()
+    {
+        // initial load: show top N songs alphabetically
+        await LoadSongsAsync();
+    }
+
+    private async Task LoadSongsAsync()
+    {
+        var q = (searchText ?? string.Empty).Trim();
+
+        IQueryable<Song> baseQuery = DbContext.Songs;
+
+        if (!string.IsNullOrEmpty(q))
+        {
+            baseQuery = baseQuery.Where(s =>
+                (s.Title  != null && EF.Functions.Like(s.Title,  $"%{q}%")) ||
+                (s.Artist != null && EF.Functions.Like(s.Artist, $"%{q}%")) ||
+                (s.Genre  != null && EF.Functions.Like(s.Genre,  $"%{q}%")) ||
+                (s.Album  != null && EF.Functions.Like(s.Album.Title, $"%{q}%")) || // if Album is navigation with Title
+                (s.Album  == null && s.Genre != null && EF.Functions.Like(s.Genre, $"%{q}%"))
+            );
+        }
+
+        songs = await baseQuery
+            .OrderBy(s => s.Title)
+            .ThenBy(s => s.Artist)
+            .Take(100)
+            .ToListAsync();
+    }
+
+    private void AddSong(Song s)
+    {
+        if (!selectedSongs.Any(x => x.SongId == s.SongId))
+            selectedSongs.Add(s);
+    }
+
+    private void RemoveSong(Song s)
+    {
+        selectedSongs.RemoveAll(x => x.SongId == s.SongId);
+    }
+
+    private string GetSongCoverSrc(Song s)
+        => string.IsNullOrWhiteSpace(s.CoverImageUrl) ? "/images/Placeholder_Image.jpg" : s.CoverImageUrl!;
+
+    private string GetCoverPreviewSrc()
+        => string.IsNullOrWhiteSpace(coverImageUrl) ? "/images/playlist-placeholder.png" : coverImageUrl!;
+
+    // Image upload: save to wwwroot/uploads/playlists/{guid}.{ext}, set coverImageUrl to web path
+    private async Task HandleImageUpload(InputFileChangeEventArgs e)
+    {
+        uploadError = "";
+        uploadedImage = e.File;
+
+        try
+        {
+            // Limit size (e.g., 2 MB)
+            const long maxSize = 2 * 1024 * 1024;
+            if (uploadedImage.Size > maxSize)
+            {
+                uploadError = "Image too large (max 2 MB).";
+                return;
+            }
+
+            // Build path
+            var ext = Path.GetExtension(uploadedImage.Name);
+            var fileName = $"{Guid.NewGuid()}{ext}";
+            var relative = Path.Combine("uploads", "playlists", fileName);            // web path: /uploads/playlists/{file}
+            var physical = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "playlists");
+
+            Directory.CreateDirectory(physical);
+            var physicalFile = Path.Combine(physical, fileName);
+
+            using var stream = File.Create(physicalFile);
+            await uploadedImage.OpenReadStream(maxSize).CopyToAsync(stream);
+
+            coverImageUrl = "/" + relative.Replace("\\", "/"); // normalize for web
+        }
+        catch (Exception ex)
+        {
+            uploadError = $"Upload failed: {ex.Message}";
+        }
+    }
+
+    private async Task SavePlaylistAsync()
+    {
+        saveMessage = "";
+        if (string.IsNullOrWhiteSpace(playlistName))
+        {
+            saveMessage = "Please enter a playlist name.";
+            return;
+        }
+        if (!selectedSongs.Any())
+        {
+            saveMessage = "Add at least one song.";
+            return;
+        }
+
+        saving = true;
+        try
+        {
+            var playlist = new Playlist
+            {
+                Title = playlistName.Trim(),
+                CoverImageUrl = coverImageUrl
+            };
+
+            foreach (var s in selectedSongs)
+            {
+                playlist.PlaylistSongs.Add(new PlaylistSongs
+                {
+                    SongId = s.SongId,
+                    Playlist = playlist
+                });
+            }
+
+            DbContext.Playlists.Add(playlist);
+            await DbContext.SaveChangesAsync();
+
+            saveMessage = "Playlist saved!";
+            // Optionally: redirect to view page
+            // Nav.NavigateTo($"/playlists/{playlist.PlaylistId}");
+        }
+        catch (Exception ex)
+        {
+            saveMessage = "Save failed: " + ex.Message;
+            saveMessage = ex.InnerException?.Message ?? ex.Message;
+
+        }
+        finally
+        {
+            saving = false;
+        }
+    }
+}
