@@ -1,0 +1,58 @@
+﻿.standard-footer {
+    /* Goal: Clean White Background */
+    background-color: #ffffff;
+    width: 100%;
+    padding: 20px 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    /* Viper Green Border for that "Rhythmix" identity */
+    border-top: 3px solid #2bff05;
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.footer-nav-list {
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+    /* Viper Green Links on White background */
+    .footer-nav-list a, .footer-logo {
+        color: #2bff05 !important;
+        text-decoration: none !important;
+        font-weight: 800; /* Extra bold to stand out on white */
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        transition: all 0.2s ease;
+    }
+
+        /* Hover effect: Subtle lift and darker green */
+        .footer-nav-list a:hover {
+            color: #1eb300 !important;
+            transform: translateY(-2px);
+        }
+
+.footer-tagline, .footer-bottom p {
+    color: #888888; /* Soft grey for secondary text */
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 8px;
+}

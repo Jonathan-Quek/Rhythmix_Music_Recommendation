@@ -2,6 +2,34 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Welcome to Rhythmix!</h1>
+@* 1. Add this link at the top to get the Magnifying Glass icon *@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-Hello! Thank you for using rhythmix, a website where you can create, search and publish music !
+<div class="layout-wrapper" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 50px; padding: 40px;">
+
+    @* Left Side *@
+    <div class="main-body-content" style="flex: 2;">
+        <h1 style="font-size: 3rem; margin-bottom: 15px;">Welcome to Rhythmix!</h1>
+        <p style="font-size: 1.2rem;">Hello! Thank you for using rhythmix, a website where you can create, search and publish music!</p>
+
+        @* 2. Search Container with Icon *@
+        <div class="search-container" style="margin-top: 30px; position: relative; display: flex; align-items: center;">
+            <i class="fa fa-search" style="position: absolute; left: 20px; font-size: 25px; color: #555;"></i>
+            <input type="text"
+                   class="rhythmix-search-input"
+                   placeholder="Search..."
+                   style="width: 100%; max-width: 900px; height: 75px; border: 3px solid black; padding: 5px 20px 5px 60px; font-size: 1.5rem;" />
+        </div>
+    </div>
+
+    @* Right Side - Taller and Wider Sidebar *@
+    <aside class="sidebar-box" style="flex: 0 0 350px; border: 3px solid black; padding: 30px; min-height: 650px; background-color: white;">
+        <h2 style="font-size: 2.5rem; margin-top: 0; border-bottom: 2px solid black; padding-bottom: 10px;">Search</h2>
+        <ul style="list-style: none; padding: 0; margin-top: 30px;">
+            <li style="margin-bottom: 25px;"><a href="create-playlist" style="text-decoration: none; color: black; font-size: 1.3rem;">Create Playlist</a></li>
+            <li style="margin-bottom: 25px;"><a href="create-album" style="text-decoration: none; color: black; font-size: 1.3rem;">Create Album</a></li>
+            <li style="margin-bottom: 25px;"><a href="my-playlists" style="text-decoration: none; color: black; font-size: 1.3rem;">My Playlists</a></li>
+            <li style="margin-bottom: 25px;"><a href="my-albums" style="text-decoration: none; color: black; font-size: 1.3rem;">My Albums</a></li>
+        </ul>
+    </aside>
+</div>

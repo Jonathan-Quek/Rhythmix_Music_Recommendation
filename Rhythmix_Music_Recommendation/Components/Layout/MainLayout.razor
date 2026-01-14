@@ -1,15 +1,22 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="page">
+    @* 1. Top Navigation Bar *@
+    <NavMenu />
 
+    @* 2. Main Body Area *@
     <main>
-        <div class="top-row px-4">
-            <NavMenu />
-        </div>
-
         <article class="content px-4">
-            @Body
+            <div class="layout-wrapper">
+                @* This is where your Home.razor content goes *@
+                <section class="main-body">
+                    @Body
+                </section>
+            </div>
         </article>
+
+        @* 3. Footer *@
+        <FooterMenu />
     </main>
 </div>
 
