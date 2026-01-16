@@ -20,6 +20,8 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddHttpClient();
+
 // 3. Authentication & Identity
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
@@ -47,6 +49,9 @@ builder.Services.AddSingleton<IEmailSender<Rhythmix_Music_RecommendationUser>, I
 
 var app = builder.Build();
 
+
+
+// Configure the HTTP request pipeline.
 // 5. Middleware Pipeline
 if (!app.Environment.IsDevelopment())
 {
@@ -63,5 +68,7 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.MapAdditionalIdentityEndpoints();
+
+await DbInitializer.SeedSongsAsync(app.Services);
 
 app.Run();

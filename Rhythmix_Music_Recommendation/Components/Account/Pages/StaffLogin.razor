@@ -1,4 +1,4 @@
-﻿@page "/Account/Login"
+﻿@page "/Account/StaffLogin"
 
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authentication
@@ -6,7 +6,7 @@
 @using Rhythmix_Music_Recommendation.Data
 
 @inject SignInManager<Rhythmix_Music_RecommendationUser> SignInManager
-@inject ILogger<Login> Logger
+@inject ILogger<StaffLogin> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 @inject UserManager<Rhythmix_Music_RecommendationUser> UserManager
@@ -21,7 +21,7 @@
             <StatusMessage Message="@errorMessage" />
             <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
                 <DataAnnotationsValidator />
-                <h2>Use a local account to log in.</h2>
+                <h2>Use a Staff account to log in.</h2>
                 <hr />
                 <ValidationSummary class="text-danger" role="alert" />
                 <div class="form-floating mb-3">
@@ -89,29 +89,47 @@
 
     public async Task LoginUser()
     {
-        // This doesn't count login failures towards account lockout
-        // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-        var result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-        if (result.Succeeded)
+        // Optional: require membership in the "User" role (recommended) OR explicitly block "Staff".
+        // Example A — block "Staff":
+        var user = await UserManager.FindByEmailAsync(Input.Email);
+        if (user is not null)
         {
-            Logger.LogInformation("User logged in.");
-            RedirectManager.RedirectTo(ReturnUrl);
+            if (await UserManager.IsInRoleAsync(user, "User"))
+            {
+                Logger.LogWarning("Staff account attempted to sign in on UserLogin page: {Email}", Input.Email);
+                // Generic message to avoid revealing whether account exists or role
+                errorMessage = "Error: Invalid login attempt.";
+                return;
+            }
+
+            else
+            {
+                // Proceed with normal password sign-in
+                var result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                if (result.Succeeded)
+                {
+                    Logger.LogInformation("User logged in.");
+                    RedirectManager.RedirectTo(ReturnUrl);
+                }
+                else if (result.RequiresTwoFactor)
+                {
+                    RedirectManager.RedirectTo(
+                        "Account/LoginWith2fa",
+                        new() { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Input.RememberMe });
+                }
+                else if (result.IsLockedOut)
+                {
+                    Logger.LogWarning("User account locked out.");
+                    RedirectManager.RedirectTo("Account/Lockout");
+                }
+                else
+                {
+                    errorMessage = "Error: Invalid login attempt.";
+                }
+            }
         }
-        else if (result.RequiresTwoFactor)
-        {
-            RedirectManager.RedirectTo(
-                "Account/LoginWith2fa",
-                new() { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Input.RememberMe });
-        }
-        else if (result.IsLockedOut)
-        {
-            Logger.LogWarning("User account locked out.");
-            RedirectManager.RedirectTo("Account/Lockout");
-        }
-        else
-        {
-            errorMessage = "Error: Invalid login attempt.";
-        }
+
+
     }
 
     private sealed class InputModel
