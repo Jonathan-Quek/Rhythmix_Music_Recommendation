@@ -15,18 +15,11 @@ namespace Rhythmix_Music_Recommendation.Data
         public DbSet<UserLogin> UserLogin { get; set; } = default!;
         public DbSet<UserRegister> UserRegister { get; set; } = default!;
 
-        
-
-        public DbSet<Rhythmix_Music_Recommendation.Components.Domain.StaffLogin> StaffLogin { get; set; } = default!;
-        public DbSet<Rhythmix_Music_Recommendation.Components.Domain.UserLogin> UserLogin { get; set; } = default!;
-        public DbSet<Rhythmix_Music_Recommendation.Components.Domain.UserRegister> UserRegister { get; set; } = default!;
         public DbSet<Rhythmix_Music_Recommendation.Components.Domain.Song> Songs { get; set; } = default!;
         public DbSet<Rhythmix_Music_Recommendation.Components.Domain.Album> Albums { get; set; } = default!;
         public DbSet<Rhythmix_Music_Recommendation.Components.Domain.Playlist> Playlists { get; set; } = default!;
         public DbSet<Rhythmix_Music_Recommendation.Components.Domain.PlaylistSongs> PlaylistSongs { get; set; } = default!;
         // NEW: Tables for persistent music storage
-        public DbSet<Playlist> Playlists { get; set; } = default!;
-        public DbSet<Album> Albums { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -35,9 +28,9 @@ namespace Rhythmix_Music_Recommendation.Data
                 .HasKey(ps => new { ps.PlaylistId, ps.SongId });
 
             builder.Entity<PlaylistSongs>()
-                .HasOne(ps => ps.Playlist)
-                .WithMany(p => p.PlaylistSongs)
-                .HasForeignKey(ps => ps.PlaylistId);
+                .HasOne(ps => ps.Playlist);
+                //.WithMany(p => p.PlaylistSongs)
+                //.HasForeignKey(ps => ps.PlaylistId);
 
             builder.Entity<PlaylistSongs>()
                 .HasOne(ps => ps.Song)
@@ -57,13 +50,6 @@ namespace Rhythmix_Music_Recommendation.Data
 
             base.OnModelCreating(builder);
 
-        }
-    }
-} // Rhythmix_Music_RecommendationContext
-            // Optional: Ensure the relationship is clear if you want to enforce rules
-            builder.Entity<Playlist>()
-                .Property(p => p.Name)
-                .IsRequired();
         }
     }
 }

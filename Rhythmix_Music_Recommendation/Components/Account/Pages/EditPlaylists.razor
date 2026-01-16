@@ -24,7 +24,7 @@
 }
 else
 {
-    <div class="playlist-panel">
+    @* <div class="playlist-panel">
         <img class="playlist-cover"
              src="@GetSongCoverSrc(selectedSongs.FirstOrDefault() ?? new Song())"
              alt="Playlist Cover"
@@ -33,13 +33,13 @@ else
             
             <input class="playlist-name-input"
             placeholder="Playlist name"
-            @bind="playlist.Title" />
+    @*         @bind="playlist.Title" />
 
         </div>
     </div>
     <button class="btn btn-primary mb-3" @onclick="UpdatePlaylist">Save Changes</button>
     <button class="btn btn-secondary mb-3 ms-2" @onclick="Cancel">Cancel</button>
-    <button class="btn btn-danger mb-3 ms-2" @onclick="DeletePlaylist">Delete Playlist</button>
+    <button class="btn btn-danger mb-3 ms-2" @onclick="DeletePlaylist">Delete Playlist</button> *@
 
 
     @if (!string.IsNullOrEmpty(saveMessage))
@@ -139,72 +139,72 @@ else
 
     private Playlist? playlist;
 
-    protected override async Task OnInitializedAsync()
-    {
-        var auth = await AuthProvider.GetAuthenticationStateAsync();
-        var userId = auth.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     var auth = await AuthProvider.GetAuthenticationStateAsync();
+    //     var userId = auth.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 
-        playlist = await DbContext.Playlists
-            .Include(p => p.PlaylistSongs)
-            .ThenInclude(ps => ps.Song)
-            .FirstOrDefaultAsync(p =>
-                p.PlaylistId == PlaylistId &&
-                p.UserId == userId);
-
-
-        if (playlist == null)
-        {
-            NavigationManager.NavigateTo("/playlists");
-        }
-
-        selectedSongs = playlist.PlaylistSongs
-            .Select(ps => ps.Song!)
-            .ToList();
+    //     playlist = await DbContext.Playlists
+    //         .Include(p => p.PlaylistSongs)
+    //         .ThenInclude(ps => ps.Song)
+    //         .FirstOrDefaultAsync(p =>
+    //             p.PlaylistId == PlaylistId &&
+    //             p.UserId == userId);
 
 
-    }
+    //     if (playlist == null)
+    //     {
+    //         NavigationManager.NavigateTo("/playlists");
+    //     }
 
-    private async Task UpdatePlaylist()
-    {
-        saveMessage = "";
+    //     selectedSongs = playlist.PlaylistSongs
+    //         .Select(ps => ps.Song!)
+    //         .ToList();
 
-        if (playlist == null)
-            return;
 
-        // Prevent empty or whitespace-only playlist name
-        if (string.IsNullOrWhiteSpace(playlist.Title))
-        {
-            saveMessage = "Playlist name cannot be empty.";
-            return;
-        }
+    // }
 
-        // Prevent empty or whitespace-only playlist name
-        if (string.IsNullOrWhiteSpace(playlist.UserId))
-        {
-            saveMessage = "Be signed in to make changes";
-            return;
-        }
+    // private async Task UpdatePlaylist()
+    // {
+    //     saveMessage = "";
 
-        // Update playlist songs
-        // Remove all old songs
-        playlist.PlaylistSongs.Clear();
+    //     if (playlist == null)
+    //         return;
 
-        // Add new selected songs
-        foreach (var song in selectedSongs)
-        {
-            playlist.PlaylistSongs.Add(new PlaylistSongs
-                {
-                    PlaylistId = playlist.PlaylistId,
-                    SongId = song.SongId,
-                    Song = song
-                });
-        }
+    //     Prevent empty or whitespace-only playlist name
+    //     if (string.IsNullOrWhiteSpace(playlist.Title))
+    //     {
+    //         saveMessage = "Playlist name cannot be empty.";
+    //         return;
+    //     }
 
-        DbContext.Playlists.Update(playlist);
-        await DbContext.SaveChangesAsync();
+    //     Prevent empty or whitespace-only playlist name
+    //     if (string.IsNullOrWhiteSpace(playlist.UserId))
+    //     {
+    //         saveMessage = "Be signed in to make changes";
+    //         return;
+    //     }
 
-        NavigationManager.NavigateTo("/playlists");
-    }
+    //     Update playlist songs
+    //     Remove all old songs
+    //     playlist.PlaylistSongs.Clear();
+
+    //     Add new selected songs
+    //     foreach (var song in selectedSongs)
+    //     {
+    //         playlist.PlaylistSongs.Add(new PlaylistSongs
+    //             {
+    //                 PlaylistId = playlist.PlaylistId,
+    //                 SongId = song.SongId,
+    //                 Song = song
+    //             });
+    //     }
+
+    //     DbContext.Playlists.Update(playlist);
+    //     await DbContext.SaveChangesAsync();
+
+    //     NavigationManager.NavigateTo("/playlists");
+    // }
 
     private async Task DeletePlaylist()
     {

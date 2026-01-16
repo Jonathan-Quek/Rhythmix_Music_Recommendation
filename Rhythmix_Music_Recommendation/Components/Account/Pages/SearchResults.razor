@@ -74,7 +74,7 @@ else if (selectedMode == SearchMode.Albums && albumResults.Any())
 {
     @foreach (var album in albumResults)
     {
-        <div class="songrow">
+        @* <div class="songrow">
             <img src="@album.CoverImageUrl"
                  alt="@album.Title"
                  style="width:128px;height:128px;object-fit:cover;border-radius:8px;"
@@ -85,7 +85,7 @@ else if (selectedMode == SearchMode.Albums && albumResults.Any())
                 <div class="artist">@album.Artist</div>
                 <div class="col-right year">@album.ReleaseYear</div>
             </div>
-        </div>
+        </div> *@
     }
 }
 else if (selectedMode == SearchMode.Artists && artistResults.Any())

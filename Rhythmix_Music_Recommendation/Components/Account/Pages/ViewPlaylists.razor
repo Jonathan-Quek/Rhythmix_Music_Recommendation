@@ -21,8 +21,8 @@
 }
 else
 {
-    @foreach (var playlist in playlists)
-    {
+    @foreach (var playlist in playlists) ;
+    @* {
         <div class="songrow">
             <div class="col-main">
                 <img src="@playlist.CoverImageUrl"
@@ -34,16 +34,16 @@ else
             </div>
 
             <a class="btn btn-sm btn-outline-secondary"
-                @* @onclick="() => Edit(playlist.PlaylistId)" *@
+                 @onclick="() => Edit(playlist.PlaylistId)" 
                     href="/playlists/edit/@playlist.PlaylistId">
                 Edit
             </a>
 
-            @* <button class="btn btn-sm btn-danger ms-2" @onclick="() => DeletePlaylist(playlist.PlaylistId)">Delete</button> *@
+             <button class="btn btn-sm btn-danger ms-2" @onclick="() => DeletePlaylist(playlist.PlaylistId)">Delete</button> 
 
 
         </div>
-    }
+    } *@
 }
 
 @code {
@@ -68,19 +68,19 @@ else
             ?.Value;
     }
 
-    protected override async Task OnInitializedAsync()
-    {
-        var userId = await GetUserId();
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     var userId = await GetUserId();
 
-        if (userId == null)
-            return;
+    //     if (userId == null)
+    //         return;
 
-        playlists = await DbContext.Playlists
-            .Include(p => p.PlaylistSongs)
-            .Where(p => p.UserId == userId)
-            .ToListAsync();
+    //     playlists = await DbContext.Playlists
+    //         .Include(p => p.PlaylistSongs)
+    //         .Where(p => p.UserId == userId)
+    //         .ToListAsync();
 
-    }
+    // }
 
     // private async Task DeletePlaylist(int playlistId)
     // {

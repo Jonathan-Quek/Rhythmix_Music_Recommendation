@@ -265,26 +265,26 @@
         {
 
 
-            var playlist = new Playlist
-            {
-                Title = playlistName.Trim(),
-                CoverImageUrl = coverImageUrl,
-                UserId = userId
-            };
+            // var playlist = new Playlist
+            // {
+            //     Title = playlistName.Trim(),
+            //     CoverImageUrl = coverImageUrl,
+            //     UserId = userId
+            // };
 
-            foreach (var s in selectedSongs)
-            {
-                playlist.PlaylistSongs.Add(new PlaylistSongs
-                {
-                    SongId = s.SongId,
-                    Playlist = playlist
-                });
-            }
+            // foreach (var s in selectedSongs)
+            // {
+            //     playlist.PlaylistSongs.Add(new PlaylistSongs
+            //     {
+            //         SongId = s.SongId,
+            //         Playlist = playlist
+            //     });
+            // }
 
-            DbContext.Playlists.Add(playlist);
-            await DbContext.SaveChangesAsync();
+            // DbContext.Playlists.Add(playlist);
+            // await DbContext.SaveChangesAsync();
 
-            saveMessage = "Playlist saved!";
+            // saveMessage = "Playlist saved!";
             // Optionally: redirect to view page
             // Nav.NavigateTo($"/playlists/{playlist.PlaylistId}");
         }

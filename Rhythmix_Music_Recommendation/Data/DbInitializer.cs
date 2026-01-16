@@ -48,73 +48,74 @@ namespace Rhythmix_Music_Recommendation.Data
                 int limit = seed.Value;
 
 
-               
-                    var url = $"http://musicbrainz.org/ws/2/release/?query=tag:{genre}&limit={limit}&fmt=json";
-                    var response = await client.GetStringAsync(url);
-                    using var doc = JsonDocument.Parse(response);
-                    var releases = doc.RootElement.GetProperty("releases");
 
-                    foreach (var release in releases.EnumerateArray())
+                var url = $"http://musicbrainz.org/ws/2/release/?query=tag:{genre}&limit={limit}&fmt=json";
+                var response = await client.GetStringAsync(url);
+                using var doc = JsonDocument.Parse(response);
+                var releases = doc.RootElement.GetProperty("releases");
+
+                foreach (var release in releases.EnumerateArray())
+                {
+                    var albumId = release.GetProperty("id").GetString();
+                    var albumTitle = release.GetProperty("title").GetString();
+                    var releaseYear = release.TryGetProperty("date", out var dateProp) && dateProp.GetString()?.Length >= 4
+                        ? int.Parse(dateProp.GetString().Substring(0, 4))
+                        : (int?)null;
+                    var artist = release.GetProperty("artist-credit")[0].GetProperty("name").GetString();
+                    var coverUrl = $"https://coverartarchive.org/release/{albumId}/front";
+
+                    // Fetch tracks for this album
+                    var tracksUrl = $"http://musicbrainz.org/ws/2/recording?release={albumId}&fmt=json&inc=artist-credits";
+                    var tracksResponse = await client.GetStringAsync(tracksUrl);
+                    using var tracksDoc = JsonDocument.Parse(tracksResponse);
+                    var recordings = tracksDoc.RootElement.GetProperty("recordings");
+
+                    //var album = new Album
+                    //{
+                    //    MusicBrainzId = albumId,
+                    //    Title = albumTitle,
+                    //    Artist = artist,
+                    //    CoverImageUrl = coverUrl,
+                    //    ReleaseYear = releaseYear
+                    //};
+
+                    foreach (var r in recordings.EnumerateArray())
                     {
-                        var albumId = release.GetProperty("id").GetString();
-                        var albumTitle = release.GetProperty("title").GetString();
-                        var releaseYear = release.TryGetProperty("date", out var dateProp) && dateProp.GetString()?.Length >= 4
-                            ? int.Parse(dateProp.GetString().Substring(0, 4))
-                            : (int?)null;
-                        var artist = release.GetProperty("artist-credit")[0].GetProperty("name").GetString();
-                        var coverUrl = $"https://coverartarchive.org/release/{albumId}/front";
-
-                        // Fetch tracks for this album
-                        var tracksUrl = $"http://musicbrainz.org/ws/2/recording?release={albumId}&fmt=json&inc=artist-credits";
-                        var tracksResponse = await client.GetStringAsync(tracksUrl);
-                        using var tracksDoc = JsonDocument.Parse(tracksResponse);
-                        var recordings = tracksDoc.RootElement.GetProperty("recordings");
-
-                        var album = new Album
-                        {
-                            MusicBrainzId = albumId,
-                            Title = albumTitle,
-                            Artist = artist,
-                            CoverImageUrl = coverUrl,
-                            ReleaseYear = releaseYear
-                        };
-
-                        foreach (var r in recordings.EnumerateArray())
-                        {
-                            var songTitle = r.GetProperty("title").GetString();
-                       
-
-                            var song = new Song
-                            {
-                                MusicBrainzId = r.GetProperty("id").GetString(),
-                                Title = songTitle,
-                                Artist = r.GetProperty("artist-credit")[0].GetProperty("name").GetString(),
-                                Genre = genre,
-                                ReleaseYear = releaseYear,
-                                CoverImageUrl = coverUrl,
-                                Album = album
-                            };
-                            album.Songs.Add(song);
-                        }
-                    await Task.Delay(1000); // To respect rate limiting
+                        var songTitle = r.GetProperty("title").GetString();
 
 
-                    context.Albums.Add(album);
-                           
+                        //        var song = new Song
+                        //        {
+                        //            MusicBrainzId = r.GetProperty("id").GetString(),
+                        //            Title = songTitle,
+                        //            Artist = r.GetProperty("artist-credit")[0].GetProperty("name").GetString(),
+                        //            Genre = genre,
+                        //            ReleaseYear = releaseYear,
+                        //            CoverImageUrl = coverUrl,
+                        //            Album = album
+                        //        };
+                        //        album.Songs.Add(song);
+                        //    }
+                        //await Task.Delay(1000); // To respect rate limiting
 
-                        
+
+                        //context.Albums.Add(album);
+
+
+
                     }
 
                     await Task.Delay(1000);
-              
-            }
-            await context.SaveChangesAsync();
 
-            
+                }
+                await context.SaveChangesAsync();
+
+
+
+            }
+
 
         }
-
-
     }
 }
 
