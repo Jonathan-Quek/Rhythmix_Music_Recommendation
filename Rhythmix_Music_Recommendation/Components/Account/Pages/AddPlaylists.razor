@@ -6,7 +6,12 @@
 @using Microsoft.AspNetCore.Components.Forms
 @using Rhythmix_Music_Recommendation.Components.Domain
 @using Rhythmix_Music_Recommendation.Data
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
 
+
+@inject AuthenticationStateProvider AuthStateProvider
 @inject Rhythmix_Music_RecommendationContext DbContext
 @inject NavigationManager Nav
 
@@ -17,10 +22,14 @@
 
 <!-- Top panel: name, cover, total songs, save -->
 <div class="playlist-panel">
+    <img class="playlist-cover"
+             src="@GetSongCoverSrc(selectedSongs.FirstOrDefault() ?? new Song())"
+             alt="Playlist Cover"
+             onerror="this.onerror=null;this.src='/images/Placeholder_Image.jpg';" />
     <div class="panel-header">
         <input class="playlist-name-input"
-               placeholder="Playlist name"
-               @bind="playlistName" />
+        placeholder="Playlist name"
+        @bind="playlistName" />
         <div class="stats">
             <span class="stat-label">Total Songs:</span>
             <span class="stat-value">@selectedSongs.Count</span>
@@ -57,9 +66,9 @@
     <div class="left-col">
         <div class="searchbar">
             <input class="search-input"
-                   placeholder="Filter/search songs"
-                   @bind="searchText"
-                   @bind:event="oninput" />
+            placeholder="Filter/search songs"
+            @bind="searchText"
+            @bind:event="oninput" />
             <button class="search-btn" title="Search" @onclick="LoadSongsAsync">🔍</button>
         </div>
 
@@ -73,11 +82,15 @@
                 @foreach (var s in songs)
                 {
                     <div class="row">
-                        @GetSongCoverSrc(s)
-                        <div class="text">
-                            <div class="title">@s.Title</div>
-                            <div class="artist">@s.Artist</div>
-                        </div>
+                        <img class="thumb"
+                             src="@GetSongCoverSrc(s)"
+                             title="@s.Title"
+                             onerror="this.onerror=null;this.src='/images/Placeholder_Image.jpg';" />                        
+                             <div class="text">
+                                <div class="title">@s.Title</div>
+                                <div class="artist">@s.Artist</div>
+                            </div>
+
                         <button class="icon-btn" title="Add" @onclick="() => AddSong(s)">➕</button>
                     </div>
                 }
@@ -98,12 +111,17 @@
                 {
                     <div class="row">
                         <img class="thumb"
-                             src="@GetSongCoverSrc(s)"
-                            "title">@s.Title</div>
+                        src="@GetSongCoverSrc(s)"
+                        title = "@s.Title"
+                        onerror="this.onerror=null;this.src='/images/Placeholder_Image.jpg';" />
+                        <div class="text">
+                            <div class="title">@s.Title </div>
                             <div class="artist">@s.Artist</div>
-                        <div>
+                        </div>
                         <button class="icon-btn danger" title="Remove" @onclick="() => RemoveSong(s)">🗑️</button>
+
                     </div>
+
                 }
             }
         </div>
@@ -111,6 +129,7 @@
 </div>
 
 @code {
+
     // State
     private string playlistName = "My Playlist";
     private string? coverImageUrl;           // final path saved to DB (under /uploads or /images)
@@ -140,7 +159,6 @@
             baseQuery = baseQuery.Where(s =>
                 (s.Title  != null && EF.Functions.Like(s.Title,  $"%{q}%")) ||
                 (s.Artist != null && EF.Functions.Like(s.Artist, $"%{q}%")) ||
-                (s.Genre  != null && EF.Functions.Like(s.Genre,  $"%{q}%")) ||
                 (s.Album  != null && EF.Functions.Like(s.Album.Title, $"%{q}%")) || // if Album is navigation with Title
                 (s.Album  == null && s.Genre != null && EF.Functions.Like(s.Genre, $"%{q}%"))
             );
@@ -151,6 +169,7 @@
             .ThenBy(s => s.Artist)
             .Take(100)
             .ToListAsync();
+
     }
 
     private void AddSong(Song s)
@@ -219,14 +238,38 @@
             saveMessage = "Add at least one song.";
             return;
         }
+        
+
 
         saving = true;
+
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var userId = user.FindFirst(c => c.Type == "sub")?.Value
+          ?? user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            saveMessage = "You must be logged in to save a playlist.";
+            saving = false;
+            return;
+        }
+
+        if (coverImageUrl == null)
+        {
+            // Set default cover if none uploaded
+            coverImageUrl = "/images/playlist-placeholder.png";
+        }
+
         try
         {
+
+
             var playlist = new Playlist
             {
                 Title = playlistName.Trim(),
-                CoverImageUrl = coverImageUrl
+                CoverImageUrl = coverImageUrl,
+                UserId = userId
             };
 
             foreach (var s in selectedSongs)

@@ -43,7 +43,18 @@ Hello! Thank you for using rhythmix, a website where you can create, search and 
             @onclick="Search">
             Search
     </button>
+
+    <button class="btn btn-primary mt-2"
+            @onclick="GoPlaylist">
+        Add Playlist
+    </button>
+    <button class="btn btn-primary mt-2"
+            @onclick="ChangePlaylist">
+        Edit Playlist
+    </button>
 </div>
+
+
 
 @* <div class="col-md-6"> *@
 @*     <a href="/results">Back to Full List</a> *@
@@ -61,6 +72,18 @@ Hello! Thank you for using rhythmix, a website where you can create, search and 
             var encoded = Uri.EscapeDataString(searchTerm);
             NavigationManager.NavigateTo($"/results?query={encoded}");
         }
+    }
+
+    private void GoPlaylist()
+    {
+            NavigationManager.NavigateTo($"/playlists/create");
+        
+    }
+
+    private void ChangePlaylist()
+    {
+        NavigationManager.NavigateTo($"/playlists");
+
     }
 
 

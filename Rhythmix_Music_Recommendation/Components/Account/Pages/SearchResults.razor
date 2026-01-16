@@ -244,8 +244,10 @@ else
                 break;
 
 
+
             case SearchMode.Artists:
                 // Implement artist search logic here
+                // Get all songs matching the artist or genre
                 var preFilteredArtists = DbContext.Songs
                     .Where(s =>
                         (s.Artist != null && EF.Functions.Like(s.Artist, $"%{q}%")) ||
@@ -255,18 +257,19 @@ else
                     .ThenBy(s => s.Genre)
                     .ToList();
 
-
+                // Filter and deduplicate by artist name (case-insensitive)
                 artistResults = preFilteredArtists
                     .AsEnumerable()
                     .Where(s =>
                         (s.Artist?.Split(' ').Any(w => w.StartsWith(q, StringComparison.OrdinalIgnoreCase)) ?? false) ||
                         (s.Genre?.Split(' ').Any(w => w.StartsWith(q, StringComparison.OrdinalIgnoreCase)) ?? false)
                     )
+                    .GroupBy(s => s.Artist?.Trim().ToLowerInvariant())
+                    .Select(g => g.First())
                     .OrderBy(s => s.Artist)
-                    .ThenBy(s => s.Genre)
                     .ToList();
-                
                 break;
+
         }
     }
 
