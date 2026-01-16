@@ -1,7 +1,104 @@
 ﻿@page "/"
+@using Rhythmix_Music_Recommendation.Components.Domain
+@rendermode InteractiveServer
+
+@inject NavigationManager NavigationManager
 
 <PageTitle>Home</PageTitle>
 
 <h1>Welcome to Rhythmix!</h1>
 
-Hello! Thank you for using rhythmix, a website where you can create, search and publish music !
+Hello! Thank you for using rhythmix, a website where you can create, search and publish music!
+
+<AuthorizeView>
+    <Authorized>
+        <h2>Recently Played</h2>
+        <div style="display: flex; gap: 1rem; overflow-x: auto;">
+            @foreach (var song in recentlyPlayed)
+            {
+                <div style="width: 180px; text-align: center;">
+                    <img src="@song.CoverImageUrl" alt="@song.Title" style="width: 50%; border-radius: 8px;" />
+                    <div style="font-weight: bold;">@song.Title</div>
+                    <div style="font-size: 0.9em; color: gray;">@song.Artist</div>
+                </div>
+            }
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <p>
+            Please <a href="Account/UserLogin">log in</a> or <a href="Account/Register">register</a> to access all features.
+        </p>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+<div class="col-md-6">
+    <h2>Search for Music</h2>
+
+    <input class="form-control"
+    placeholder="Search by title, artist, or genre"
+    @bind="searchTerm" />
+
+    <button class="btn btn-primary mt-2"
+            @onclick="Search">
+            Search
+    </button>
+
+    <button class="btn btn-primary mt-2"
+            @onclick="GoPlaylist">
+        Add Playlist
+    </button>
+    <button class="btn btn-primary mt-2"
+            @onclick="ChangePlaylist">
+        Edit Playlist
+    </button>
+</div>
+
+
+
+@* <div class="col-md-6"> *@
+@*     <a href="/results">Back to Full List</a> *@
+@* </div> *@
+
+
+@code {
+
+    private string searchTerm = string.Empty;
+
+    private void Search()
+    {
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            var encoded = Uri.EscapeDataString(searchTerm);
+            NavigationManager.NavigateTo($"/results?query={encoded}");
+        }
+    }
+
+    private void GoPlaylist()
+    {
+            NavigationManager.NavigateTo($"/playlists/create");
+        
+    }
+
+    private void ChangePlaylist()
+    {
+        NavigationManager.NavigateTo($"/playlists");
+
+    }
+
+
+    // Example: Replace with your own logic or bind to a database/service
+    private List<Song> recentlyPlayed = new()
+    {
+        new Song { Title = "Song A", Artist = "Artist 1", CoverImageUrl = "https://coverartarchive.org/release/4bbf56b8-6aa0-4988-8aec-9b92eb65a9f6/front" },
+        new Song { Title = "Song B", Artist = "Artist 2", CoverImageUrl = "https://via.placeholder.com/150" },
+        new Song { Title = "Song C", Artist = "Artist 3", CoverImageUrl = "https://via.placeholder.com/150" },
+        new Song { Title = "Song D", Artist = "Artist 4", CoverImageUrl = "https://via.placeholder.com/150" },
+        new Song { Title = "Song E", Artist = "Artist 5", CoverImageUrl = "https://via.placeholder.com/150" },
+        new Song { Title = "Song F", Artist = "Artist 6", CoverImageUrl = "https://via.placeholder.com/150" },
+
+
+    };
+
+    
+}

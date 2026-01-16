@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Rhythmix_Music_Recommendation.Data;
 
@@ -11,9 +12,11 @@ using Rhythmix_Music_Recommendation.Data;
 namespace Rhythmix_Music_Recommendation.Migrations
 {
     [DbContext(typeof(Rhythmix_Music_RecommendationContext))]
-    partial class Rhythmix_Music_RecommendationContextModelSnapshot : ModelSnapshot
+    [Migration("20260114040815_AddingPlaylistRelatedTables")]
+    partial class AddingPlaylistRelatedTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -209,7 +212,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
 
                     b.HasKey("AlbumId");
 
-                    b.ToTable("Albums", (string)null);
+                    b.ToTable("Albums");
                 });
 
             modelBuilder.Entity("Rhythmix_Music_Recommendation.Components.Domain.Playlist", b =>
@@ -227,15 +230,9 @@ namespace Rhythmix_Music_Recommendation.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("PlaylistId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Playlists", (string)null);
+                    b.ToTable("Playlists");
                 });
 
             modelBuilder.Entity("Rhythmix_Music_Recommendation.Components.Domain.PlaylistSongs", b =>
@@ -250,7 +247,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
 
                     b.HasIndex("SongId");
 
-                    b.ToTable("PlaylistSongs", (string)null);
+                    b.ToTable("PlaylistSongs");
                 });
 
             modelBuilder.Entity("Rhythmix_Music_Recommendation.Components.Domain.Song", b =>
@@ -293,7 +290,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
                     b.HasIndex("MusicBrainzId")
                         .IsUnique();
 
-                    b.ToTable("Songs", (string)null);
+                    b.ToTable("Songs");
                 });
 
             modelBuilder.Entity("Rhythmix_Music_Recommendation.Components.Domain.StaffLogin", b =>
@@ -324,7 +321,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("StaffLogin", (string)null);
+                    b.ToTable("StaffLogin");
                 });
 
             modelBuilder.Entity("Rhythmix_Music_Recommendation.Components.Domain.UserLogin", b =>
@@ -355,7 +352,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserLogin", (string)null);
+                    b.ToTable("UserLogin");
                 });
 
             modelBuilder.Entity("Rhythmix_Music_Recommendation.Components.Domain.UserRegister", b =>
@@ -389,7 +386,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserRegister", (string)null);
+                    b.ToTable("UserRegister");
                 });
 
             modelBuilder.Entity("Rhythmix_Music_Recommendation.Data.Rhythmix_Music_RecommendationUser", b =>
@@ -467,7 +464,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fad298b8-8d36-43b3-a506-fe68c98129e3",
+                            ConcurrencyStamp = "eb1404b8-6556-4193-b794-11fbef6ac0fc",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -475,9 +472,9 @@ namespace Rhythmix_Music_Recommendation.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFhvWmxARbp4OWjhDbjLTcjvXmYGsEY8y/LW1yQ3hsrIVCpUoa0zwc6uI0GbekkZ8A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELubytJTecKUTeKcO6nDEGEz+r+gd2bRW+vgPwkc4JT81G9WeEWXx1UbTNA8r1tTGg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "539f2acd-a9f6-43a6-9190-23f1a3717410",
+                            SecurityStamp = "56097d04-f093-497a-9845-3c2263b66f18",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         },
@@ -485,7 +482,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
                         {
                             Id = "b1a1f4c2-4f5e-4d3b-9c3a-1e2f3a4b5c6d",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1c44f420-8546-4e53-b6f5-4e12d1acf1bc",
+                            ConcurrencyStamp = "2a05c5d6-c37f-4f07-b279-f510c28990ea",
                             Email = "test@mail.com",
                             EmailConfirmed = true,
                             FirstName = "John",
@@ -493,9 +490,9 @@ namespace Rhythmix_Music_Recommendation.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "TEST@MAIL.COM",
                             NormalizedUserName = "TEST@MAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPfYYQqG65I+zWK4NCT4LJ+QscheUyJPDtyTus4I1FcesLiZskpbnkpijUBZQJanVw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDnJUwcTaL7Am1OxKnkJfEcUtaLiUsyhE0SPPlmr3uLGOzUOqK317O0OxaycxOwFsw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a8eb186a-75c9-411e-a41b-ae0c016e0e69",
+                            SecurityStamp = "8b79c89e-60ed-4bad-b483-88cd20979802",
                             TwoFactorEnabled = false,
                             UserName = "test@mail.com"
                         });
@@ -550,17 +547,6 @@ namespace Rhythmix_Music_Recommendation.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Rhythmix_Music_Recommendation.Components.Domain.Playlist", b =>
-                {
-                    b.HasOne("Rhythmix_Music_Recommendation.Data.Rhythmix_Music_RecommendationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Rhythmix_Music_Recommendation.Components.Domain.PlaylistSongs", b =>

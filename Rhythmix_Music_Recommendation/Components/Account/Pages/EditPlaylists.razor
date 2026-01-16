@@ -1,0 +1,270 @@
+﻿@page "/playlists/edit/{PlaylistId:int}"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@using Rhythmix_Music_Recommendation.Components.Domain
+@using Rhythmix_Music_Recommendation.Data
+@attribute [Authorize]
+
+@inject Rhythmix_Music_RecommendationContext DbContext
+@inject AuthenticationStateProvider AuthProvider
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JS
+
+
+@rendermode InteractiveServer
+
+<PageTitle>Edit Playlist</PageTitle>
+
+<h2>Edit Playlist</h2>
+<p class="subtitle">Edit your playlists</p>
+
+@if (playlist == null)
+{
+    <p>Loading playlist...</p>
+}
+else
+{
+    <div class="playlist-panel">
+        <img class="playlist-cover"
+             src="@GetSongCoverSrc(selectedSongs.FirstOrDefault() ?? new Song())"
+             alt="Playlist Cover"
+             onerror="this.onerror=null;this.src='/images/Placeholder_Image.jpg';" />
+        <div class="panel-header">
+            
+            <input class="playlist-name-input"
+            placeholder="Playlist name"
+            @bind="playlist.Title" />
+
+        </div>
+    </div>
+    <button class="btn btn-primary mb-3" @onclick="UpdatePlaylist">Save Changes</button>
+    <button class="btn btn-secondary mb-3 ms-2" @onclick="Cancel">Cancel</button>
+    <button class="btn btn-danger mb-3 ms-2" @onclick="DeletePlaylist">Delete Playlist</button>
+
+
+    @if (!string.IsNullOrEmpty(saveMessage))
+    {
+        <div class="save-msg">@saveMessage</div>
+    }
+}
+
+<div class="two-columns">
+
+    <div class="left-col">
+
+        <div class="search-image">
+
+            <input class="search-input"
+            placeholder="Filer/search songs"
+            @bind="searchText"
+            @bind:event="oninput" />
+            <button class="btn btn-primary ms-2" @onclick="LoadSongsAsync">Search</button>
+
+            <div class=" list">
+
+                @if (!songs.Any())
+                {
+                    <div class="empty">No songs match your search</div>
+                }
+                else
+                {
+                    @foreach (var s in songs)
+                    {
+                        <div class="row">
+                            <img class="thumb"
+                                 src="@GetSongCoverSrc(s)"
+                                 alt="@s.Title"
+                                 onerror="this.onerror=null;this.src='/images/Placeholder_Image.jpg';" />
+                                 <div class="text">
+                                <div class="title">@s.Title</div>
+                                <div class="artist">@s.Artist</div>
+                                 </div>
+                            <button class="icon-btn" title="Remove" @onclick="() => AddSong(s)">➕</button>
+
+                        </div>
+                    }
+                }
+
+            </div>
+        </div>
+
+
+    </div>
+
+        <div class="right-col">
+            <h3>Added Songs</h3>
+            <div class="list">
+                @if (!selectedSongs.Any())
+                {
+                    <div class="empty">No songs added yet.</div>
+                }
+                else
+                {
+                    @foreach (var s in selectedSongs)
+                    {
+                        <div class="row">
+                            <img class="thumb"
+                                 src="@GetSongCoverSrc(s)"
+                                 title="@s.Title"
+                                 onerror="this.onerror=null;this.src='/images/Placeholder_Image.jpg';" />
+                                <div class="text">
+                                <div class="title">@s.Title</div>
+                                <div class="artist">@s.Artist</div>
+                            <button class="icon-btn danger" title="Remove" @onclick="() => RemoveSong(s)">🗑️</button>
+
+                        </div>
+
+                    </div>
+
+                    }
+                }
+            </div>
+        </div>
+</div>
+
+
+
+
+
+@code {
+
+    private string searchText = "";
+    private List<Song> songs = new();             // search results
+    private List<Song> selectedSongs = new();
+    private string saveMessage = "";
+
+
+    [Parameter]
+    public int PlaylistId { get; set; }
+
+    private Playlist? playlist;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var auth = await AuthProvider.GetAuthenticationStateAsync();
+        var userId = auth.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        playlist = await DbContext.Playlists
+            .Include(p => p.PlaylistSongs)
+            .ThenInclude(ps => ps.Song)
+            .FirstOrDefaultAsync(p =>
+                p.PlaylistId == PlaylistId &&
+                p.UserId == userId);
+
+
+        if (playlist == null)
+        {
+            NavigationManager.NavigateTo("/playlists");
+        }
+
+        selectedSongs = playlist.PlaylistSongs
+            .Select(ps => ps.Song!)
+            .ToList();
+
+
+    }
+
+    private async Task UpdatePlaylist()
+    {
+        saveMessage = "";
+
+        if (playlist == null)
+            return;
+
+        // Prevent empty or whitespace-only playlist name
+        if (string.IsNullOrWhiteSpace(playlist.Title))
+        {
+            saveMessage = "Playlist name cannot be empty.";
+            return;
+        }
+
+        // Prevent empty or whitespace-only playlist name
+        if (string.IsNullOrWhiteSpace(playlist.UserId))
+        {
+            saveMessage = "Be signed in to make changes";
+            return;
+        }
+
+        // Update playlist songs
+        // Remove all old songs
+        playlist.PlaylistSongs.Clear();
+
+        // Add new selected songs
+        foreach (var song in selectedSongs)
+        {
+            playlist.PlaylistSongs.Add(new PlaylistSongs
+                {
+                    PlaylistId = playlist.PlaylistId,
+                    SongId = song.SongId,
+                    Song = song
+                });
+        }
+
+        DbContext.Playlists.Update(playlist);
+        await DbContext.SaveChangesAsync();
+
+        NavigationManager.NavigateTo("/playlists");
+    }
+
+    private async Task DeletePlaylist()
+    {
+        // if (!await JS.InvokeAsync<bool>("confirm", "Are you sure you want to delete this playlist?"))
+        // {
+        //     return;
+        // }
+
+
+        if (playlist == null)
+            return;
+
+        DbContext.Playlists.Remove(playlist);
+        await DbContext.SaveChangesAsync();
+        NavigationManager.NavigateTo("/playlists");
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/playlists");
+    }
+
+    private string GetSongCoverSrc(Song s)
+        => string.IsNullOrWhiteSpace(s.CoverImageUrl) ? "/images/Placeholder_Image.jpg" : s.CoverImageUrl!;
+
+
+
+    private void AddSong(Song s)
+    {
+        if (!selectedSongs.Any(x => x.SongId == s.SongId))
+            selectedSongs.Add(s);
+    }
+
+    private void RemoveSong(Song s)
+    {
+        selectedSongs.RemoveAll(x => x.SongId == s.SongId);
+    }
+
+
+
+    private async Task LoadSongsAsync()
+    {
+        var q = (searchText ?? string.Empty).Trim();
+
+        IQueryable<Song> baseQuery = DbContext.Songs;
+
+        if (!string.IsNullOrEmpty(q))
+        {
+            baseQuery = baseQuery.Where(s =>
+                (s.Title != null && EF.Functions.Like(s.Title, $"%{q}%")) ||
+                (s.Artist != null && EF.Functions.Like(s.Artist, $"%{q}%")) ||
+                (s.Album != null && EF.Functions.Like(s.Album.Title, $"%{q}%")) || // if Album is navigation with Title
+                (s.Album == null && s.Genre != null && EF.Functions.Like(s.Genre, $"%{q}%"))
+            );
+        }
+
+        songs = await baseQuery
+            .OrderBy(s => s.Title)
+            .ThenBy(s => s.Artist)
+            .Take(100)
+            .ToListAsync();
+    }
+}

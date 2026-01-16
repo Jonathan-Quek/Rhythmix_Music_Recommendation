@@ -8,6 +8,12 @@
 
   <ItemGroup>
     <Compile Remove="Components\Domain\Register.cs" />
+    <Compile Remove="Migrations\20260112121942_SeedSongs.cs" />
+    <Compile Remove="Migrations\20260112121942_SeedSongs.Designer.cs" />
+    <Compile Remove="Migrations\20260114021304_AddingPlaylistTable.cs" />
+    <Compile Remove="Migrations\20260114021304_AddingPlaylistTable.Designer.cs" />
+    <Compile Remove="Migrations\20260114024120_AddingPlaylistRelatedTables.cs" />
+    <Compile Remove="Migrations\20260114024120_AddingPlaylistRelatedTables.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +27,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.22" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\images\Placeholder_Image.jpg" />
   </ItemGroup>
 
 </Project>
