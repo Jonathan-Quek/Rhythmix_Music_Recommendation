@@ -1,35 +1,150 @@
 ﻿@page "/"
+@using Rhythmix_Music_Recommendation.Services
+@using Rhythmix_Music_Recommendation.Components.Domain
+@rendermode InteractiveServer
+@inject MusicDataService DataService
 
 <PageTitle>Home</PageTitle>
 
-@* 1. Add this link at the top to get the Magnifying Glass icon *@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<div class="layout-wrapper" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 50px; padding: 40px;">
+<div class="layout-wrapper" style="margin-top: 5px; display: flex; justify-content: space-between; align-items: flex-start; gap: 50px; padding: 40px;">
 
-    @* Left Side *@
+    @* Left Side Content *@
     <div class="main-body-content" style="flex: 2;">
         <h1 style="font-size: 3rem; margin-bottom: 15px;">Welcome to Rhythmix!</h1>
         <p style="font-size: 1.2rem;">Hello! Thank you for using rhythmix, a website where you can create, search and publish music!</p>
 
-        @* 2. Search Container with Icon *@
         <div class="search-container" style="margin-top: 30px; position: relative; display: flex; align-items: center;">
             <i class="fa fa-search" style="position: absolute; left: 20px; font-size: 25px; color: #555;"></i>
-            <input type="text"
-                   class="rhythmix-search-input"
-                   placeholder="Search..."
+            <input type="text" class="rhythmix-search-input" placeholder="Search..."
                    style="width: 100%; max-width: 900px; height: 75px; border: 3px solid black; padding: 5px 20px 5px 60px; font-size: 1.5rem;" />
         </div>
     </div>
 
-    @* Right Side - Taller and Wider Sidebar *@
+    @* Sidebar *@
     <aside class="sidebar-box" style="flex: 0 0 350px; border: 3px solid black; padding: 30px; min-height: 650px; background-color: white;">
         <h2 style="font-size: 2.5rem; margin-top: 0; border-bottom: 2px solid black; padding-bottom: 10px;">Search</h2>
         <ul style="list-style: none; padding: 0; margin-top: 30px;">
-            <li style="margin-bottom: 25px;"><a href="create-playlist" style="text-decoration: none; color: black; font-size: 1.3rem;">Create Playlist</a></li>
-            <li style="margin-bottom: 25px;"><a href="create-album" style="text-decoration: none; color: black; font-size: 1.3rem;">Create Album</a></li>
+            <li style="margin-bottom: 25px;">
+                <button @onclick="OpenPlaylistModal" style="background: none; border: none; padding: 0; cursor: pointer; color: black; font-size: 1.3rem; font-family: inherit;">
+                    Create Playlist
+                </button>
+            </li>
+            <li style="margin-bottom: 25px;">
+                <button @onclick="OpenAlbumModal" style="background: none; border: none; padding: 0; cursor: pointer; color: black; font-size: 1.3rem; font-family: inherit;">
+                    Create Album
+                </button>
+            </li>
             <li style="margin-bottom: 25px;"><a href="my-playlists" style="text-decoration: none; color: black; font-size: 1.3rem;">My Playlists</a></li>
             <li style="margin-bottom: 25px;"><a href="my-albums" style="text-decoration: none; color: black; font-size: 1.3rem;">My Albums</a></li>
         </ul>
     </aside>
 </div>
+
+@* --- PLAYLIST MODAL --- *@
+@if (showPlaylistModal)
+{
+    <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 9999;">
+        <div style="background: #282828; color: white; padding: 24px; border-radius: 8px; width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="margin: 0;">Create Playlist</h3>
+                <button @onclick="ClosePlaylistModal" style="background: none; border: none; color: #b3b3b3; font-size: 24px; cursor: pointer;">&times;</button>
+            </div>
+            <div style="display: flex; gap: 20px;">
+                <div style="flex: 1; text-align: center;">
+                    <div style="width: 180px; height: 180px; background: #333; display: flex; justify-content: center; align-items: center;">
+                        <i class="fa fa-music" style="font-size: 50px; color: #777;"></i>
+                    </div>
+                </div>
+                <div style="flex: 1.5; display: flex; flex-direction: column; gap: 10px;">
+                    <input type="text" @bind="playlistName" placeholder="Playlist Name" style="background: #3e3e3e; border: none; color: white; padding: 12px; border-radius: 4px;" />
+                    <textarea @bind="playlistDesc" placeholder="Description" style="background: #3e3e3e; border: none; color: white; padding: 12px; border-radius: 4px; height: 100px; resize: none;"></textarea>
+                </div>
+            </div>
+            <div style="margin-top: 25px; text-align: right;">
+                <button @onclick="SavePlaylist" style="background: white; color: black; font-weight: bold; padding: 12px 32px; border-radius: 500px; border: none; cursor: pointer;">Save</button>
+            </div>
+        </div>
+    </div>
+}
+
+@* --- ALBUM MODAL --- *@
+@if (showAlbumModal)
+{
+    <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 9999;">
+        <div style="background: #181818; color: white; padding: 24px; border-radius: 8px; width: 500px; border: 1px solid #333;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="margin: 0;">New Album Details</h3>
+                <button @onclick="CloseAlbumModal" style="background: none; border: none; color: #b3b3b3; font-size: 24px; cursor: pointer;">&times;</button>
+            </div>
+            <div style="display: flex; gap: 20px;">
+                <div style="flex: 1; text-align: center;">
+                    <div style="width: 180px; height: 180px; background: #333; display: flex; justify-content: center; align-items: center; border-radius: 4px;">
+                        <i class="fa fa-id-card" style="font-size: 50px; color: #777;"></i>
+                    </div>
+                </div>
+                <div style="flex: 1.5; display: flex; flex-direction: column; gap: 10px;">
+                    <input type="text" @bind="albumName" placeholder="Album Title" style="background: #3e3e3e; border: none; color: white; padding: 12px; border-radius: 4px;" />
+                    <input type="text" @bind="albumArtist" placeholder="Artist Name" style="background: #3e3e3e; border: none; color: white; padding: 12px; border-radius: 4px;" />
+                    <textarea @bind="albumDesc" placeholder="Album Bio" style="background: #3e3e3e; border: none; color: white; padding: 12px; border-radius: 4px; height: 70px; resize: none;"></textarea>
+                </div>
+            </div>
+            <div style="margin-top: 25px; text-align: right;">
+                <button @onclick="SaveAlbum" style="background: #1db954; color: white; font-weight: bold; padding: 12px 32px; border-radius: 500px; border: none; cursor: pointer;">Create Album</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool showPlaylistModal = false;
+    private string playlistName = "";
+    private string playlistDesc = "";
+
+    private bool showAlbumModal = false;
+    private string albumName = "";
+    private string albumArtist = "";
+    private string albumDesc = "";
+
+    private void OpenPlaylistModal() { showPlaylistModal = true; }
+    private void ClosePlaylistModal() { showPlaylistModal = false; }
+    private void OpenAlbumModal() { showAlbumModal = true; }
+    private void CloseAlbumModal() { showAlbumModal = false; }
+
+    private void SavePlaylist()
+    {
+        // Added Id = Guid.NewGuid() so Delete/Edit can find this specific item
+        var newP = new Playlist
+        {
+            Id = Guid.NewGuid(),
+            Name = playlistName,
+            Description = playlistDesc
+        };
+
+        DataService.AddPlaylist(newP);
+
+        playlistName = "";
+        playlistDesc = "";
+        showPlaylistModal = false;
+    }
+
+    private void SaveAlbum()
+    {
+        // Added Id = Guid.NewGuid() so Delete/Edit can find this specific item
+        var newA = new Album
+        {
+            Id = Guid.NewGuid(),
+            Title = albumName,
+            Artist = albumArtist,
+            Bio = albumDesc
+        };
+
+        DataService.AddAlbum(newA);
+
+        albumName = "";
+        albumArtist = "";
+        albumDesc = "";
+        showAlbumModal = false;
+    }
+}

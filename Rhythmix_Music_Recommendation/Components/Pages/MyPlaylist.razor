@@ -1,0 +1,108 @@
+﻿@page "/my-playlists"
+@using Rhythmix_Music_Recommendation.Services
+@using Rhythmix_Music_Recommendation.Components.Domain
+@rendermode InteractiveServer
+@inject MusicDataService DataService
+
+<PageTitle>My Playlists</PageTitle>
+
+<div style="margin-top: 10px; padding: 40px;">
+    <h1 style="border-bottom: 2px solid #8A2BE2; padding-bottom: 10px;">My Playlists</h1>
+
+    @* Now that the service is Scoped, this count only reflects the CURRENT user/guest *@
+    @if (DataService.Playlists == null || !DataService.Playlists.Any())
+    {
+        <div style="margin-top: 50px; text-align: center; color: #555;">
+            <i class="fa fa-music" style="font-size: 100px; color: #ddd;"></i>
+            <p style="font-size: 1.5rem; margin-top: 20px;">Your private collection is empty.</p>
+            <p>Go to the Home page to create your first playlist!</p>
+        </div>
+    }
+    else
+    {
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 30px;">
+            @foreach (var playlist in DataService.Playlists)
+            {
+                <div style="background: #181818; color: white; padding: 20px; border-radius: 8px; position: relative;">
+                    <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 5px; z-index: 10;">
+                        @* Edit Button *@
+                        <button @onclick="() => PrepareEdit(playlist)"
+                                style="background: #8A2BE2; border: none; color: white; border-radius: 4px; padding: 5px; cursor: pointer;"
+                                title="Edit Playlist">
+                            <i class="fa fa-pencil"></i>
+                        </button>
+
+                        @* Delete Button *@
+                        <button @onclick="() => HandleDelete(playlist.Id)"
+                                style="background: #dc3545; border: none; color: white; border-radius: 4px; padding: 5px; cursor: pointer;"
+                                title="Delete Playlist">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </div>
+
+                    <div style="width: 100%; aspect-ratio: 1/1; background: #282828; display: flex; justify-content: center; align-items: center; margin-bottom: 15px;">
+                        <i class="fa fa-music" style="font-size: 60px; color: #555;"></i>
+                    </div>
+                    <h4>@playlist.Name</h4>
+                    <p style="color: #b3b3b3; font-size: 0.8rem; height: 3em; overflow: hidden; text-overflow: ellipsis;">@playlist.Description</p>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@* --- EDIT MODAL --- *@
+@if (isEditing)
+{
+    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000;">
+        <div style="background: white; padding: 30px; border-radius: 12px; width: 400px; color: black; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+            <h3 style="margin-top: 0; color: #8A2BE2;">Edit Playlist</h3>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 5px;">Name</label>
+                <input @bind="editingPlaylist.Name" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" />
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 5px;">Description</label>
+                <textarea @bind="editingPlaylist.Description" style="width: 100%; height: 100px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: none;"></textarea>
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button @onclick="() => isEditing = false" style="background: #ccc; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Cancel</button>
+                <button @onclick="SaveChanges" style="background: #8A2BE2; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold;">Save Changes</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool isEditing = false;
+    private Playlist editingPlaylist = new();
+
+    private void PrepareEdit(Playlist p)
+    {
+        // We create a "Clone" so changes don't show on the main page until we hit Save
+        editingPlaylist = new Playlist
+        {
+            Id = p.Id,
+            Name = p.Name,
+            Description = p.Description
+        };
+        isEditing = true;
+    }
+
+    private void SaveChanges()
+    {
+        DataService.UpdatePlaylist(editingPlaylist);
+        isEditing = false;
+        // This tells Blazor to re-draw the UI with the updated data
+        StateHasChanged();
+    }
+
+    private void HandleDelete(Guid id)
+    {
+        DataService.DeletePlaylist(id);
+        StateHasChanged();
+    }
+}
