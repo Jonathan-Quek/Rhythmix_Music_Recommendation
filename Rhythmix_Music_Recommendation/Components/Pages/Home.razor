@@ -21,11 +21,11 @@
             <i class="fa fa-search" style="position: absolute; left: 20px; font-size: 25px; color: #555;"></i>
             <EditForm Model= "@searchModel" OnValidSubmit="Search" FormName="SearchForm">
                 <InputText class="rhythmix-search-input" placeholder="Search..."
-                       style="width: 100%; max-width: 900px; height: 75px; border: 3px solid black; padding: 5px 20px 5px 60px; font-size: 1.5rem;"
-                       @bind-Value="searchModel.Query"/>
+                style="width: 100%; max-width: 900px; height: 75px; border: 3px solid black; padding: 5px 20px 5px 60px; font-size: 1.5rem;"
+                @bind-Value="searchModel.Query"/>
 
             </EditForm>
-            
+
         </div>
     </div>
 
@@ -56,20 +56,51 @@
         <div style="background: #282828; color: white; padding: 24px; border-radius: 8px; width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h3 style="margin: 0;">Create Playlist</h3>
+                <div>@saveMessage</div>
                 <button @onclick="ClosePlaylistModal" style="background: none; border: none; color: #b3b3b3; font-size: 24px; cursor: pointer;">&times;</button>
             </div>
             <div style="display: flex; gap: 20px;">
                 <div style="flex: 1; text-align: center;">
                     <div style="width: 180px; height: 180px; background: #333; display: flex; justify-content: center; align-items: center;">
-                        <i class="fa fa-music" style="font-size: 50px; color: #777;"></i>
+
+                        @if (!string.IsNullOrEmpty(P_coverImageUrl))
+                        {
+                            <img src="@P_coverImageUrl" class="cover-image" />
+                        }
+                        else
+                        {
+                            <i class="fa fa-music" style="font-size: 50px; color: #777;"></i>
+
+                        }
+
                     </div>
+                    <div>
+
+                        @if (!string.IsNullOrEmpty(P_coverImageUrl))
+                        {
+                            <button class="custom-file-btn" @onclick="ClearCoverImage">Clear Image</button>
+                        }
+                        else
+                        {
+                            <label for="fileUpload" class="custom-file-btn">Upload Image</label>
+                            <InputFile id="fileUpload" OnChange="e => HandleImageUpload(e, 1)" accept="image/*" style="display:none;" />
+
+
+                            @if (!string.IsNullOrEmpty(uploadError))
+                            {
+                                <div>@uploadError</div>
+                            }
+                        }
+
+                    </div>
+
                 </div>
                 <div style="flex: 1.5; display: flex; flex-direction: column; gap: 10px;">
                     <input type="text" @bind="playlistName" placeholder="Playlist Name" style="background: #3e3e3e; border: none; color: white; padding: 12px; border-radius: 4px;" />
                     <textarea @bind="playlistDesc" placeholder="Description" style="background: #3e3e3e; border: none; color: white; padding: 12px; border-radius: 4px; height: 100px; resize: none;"></textarea>
                 </div>
             </div>
-            <div style="margin-top: 25px; text-align: right;">
+            <div style="margin-top: 5px; text-align: right;">
                 <button @onclick="SavePlaylist" style="background: white; color: black; font-weight: bold; padding: 12px 32px; border-radius: 500px; border: none; cursor: pointer;">Save</button>
             </div>
         </div>
@@ -83,25 +114,60 @@
         <div style="background: #181818; color: white; padding: 24px; border-radius: 8px; width: 500px; border: 1px solid #333;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h3 style="margin: 0;">New Album Details</h3>
+                <div>@saveMessage</div>
                 <button @onclick="CloseAlbumModal" style="background: none; border: none; color: #b3b3b3; font-size: 24px; cursor: pointer;">&times;</button>
             </div>
             <div style="display: flex; gap: 20px;">
                 <div style="flex: 1; text-align: center;">
-                    <div style="width: 180px; height: 180px; background: #333; display: flex; justify-content: center; align-items: center; border-radius: 4px;">
-                        <i class="fa fa-id-card" style="font-size: 50px; color: #777;"></i>
+                    <div style="width: 180px; height: 180px; background: #333; display: flex; justify-content: center; align-items: center;">
+
+                        @if (!string.IsNullOrEmpty(A_coverImageUrl))
+                        {
+                            <img src="@A_coverImageUrl" class="cover-image" />
+                        }
+                        else
+                        {
+                            <i class="fa fa-music" style="font-size: 50px; color: #777;"></i>
+
+                        }
+
                     </div>
+                    <div>
+
+                        @if (!string.IsNullOrEmpty(A_coverImageUrl))
+                        {
+                            <button class="custom-file-btn" style="margin-top: 5px" @onclick="ClearCoverImage">Clear Image</button>
+                        }
+                        else
+                        {
+                            <label for="albumFileUpload" class="custom-file-btn">Upload Image</label>
+                            <InputFile id="albumFileUpload" OnChange="e => HandleImageUpload(e, 2)" accept="image/*" style="display:none;" />
+
+
+                            @if (!string.IsNullOrEmpty(uploadError))
+                            {
+                                <div>@uploadError</div>
+                            }
+                        }
+
+                    </div>
+
                 </div>
                 <div style="flex: 1.5; display: flex; flex-direction: column; gap: 10px;">
                     <input type="text" @bind="albumName" placeholder="Album Title" style="background: #3e3e3e; border: none; color: white; padding: 12px; border-radius: 4px;" />
                     <input type="text" @bind="albumArtist" placeholder="Artist Name" style="background: #3e3e3e; border: none; color: white; padding: 12px; border-radius: 4px;" />
                     <textarea @bind="albumDesc" placeholder="Album Bio" style="background: #3e3e3e; border: none; color: white; padding: 12px; border-radius: 4px; height: 70px; resize: none;"></textarea>
+                    <div style="margin-top: 5px; text-align: right;">
+                        <button @onclick="SaveAlbum" style="background: #1db954; color: white; font-weight: bold; padding: 6px 16px; border-radius: 500px; border: none; cursor: pointer;">Create Album</button>
+                    </div>
+
                 </div>
             </div>
-            <div style="margin-top: 25px; text-align: right;">
-                <button @onclick="SaveAlbum" style="background: #1db954; color: white; font-weight: bold; padding: 12px 32px; border-radius: 500px; border: none; cursor: pointer;">Create Album</button>
-            </div>
+
         </div>
+
     </div>
+
 }
 
 @code {
@@ -113,6 +179,13 @@
     private string albumName = "";
     private string albumArtist = "";
     private string albumDesc = "";
+
+    private string uploadError = "";
+    private string? P_coverImageUrl;
+    private string? A_coverImageUrl;
+    private IBrowserFile? uploadedImage;
+
+    private string saveMessage = "";
 
     private void OpenPlaylistModal() { showPlaylistModal = true; }
     private void ClosePlaylistModal() { showPlaylistModal = false; }
@@ -135,30 +208,57 @@
 
     private void SavePlaylist()
     {
+        if (string.IsNullOrWhiteSpace(playlistName))
+        {
+            // Optionally, show an error message to the user
+            saveMessage = "Playlist name is required.";
+            return;
+        }
+
+
         // Added Id = Guid.NewGuid() so Delete/Edit can find this specific item
         var newP = new Playlist
         {
             PlaylistId = Guid.NewGuid(),
             Title = playlistName,
-            Description = playlistDesc
+            Description = playlistDesc,
+            CoverImageUrl = P_coverImageUrl
         };
 
         DataService.AddPlaylist(newP);
 
         playlistName = "";
         playlistDesc = "";
+        P_coverImageUrl = null;
         showPlaylistModal = false;
     }
 
     private void SaveAlbum()
     {
+
+        if (string.IsNullOrWhiteSpace(albumName))
+        {
+            // Optionally, show an error message to the user
+            saveMessage = "Album name is required.";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(albumArtist))
+        {
+            // Optionally, show an error message to the user
+            saveMessage = "Album artist is required.";
+            return;
+        }
+
+
         // Added Id = Guid.NewGuid() so Delete/Edit can find this specific item
         var newA = new Album
         {
             AlbumId = Guid.NewGuid(),
             Title = albumName,
             Artist = albumArtist,
-            Bio = albumDesc
+            Bio = albumDesc,
+            CoverImageUrl = A_coverImageUrl
         };
 
         DataService.AddAlbum(newA);
@@ -166,60 +266,77 @@
         albumName = "";
         albumArtist = "";
         albumDesc = "";
+        A_coverImageUrl = null;
         showAlbumModal = false;
     }
+
+    private string GetCoverPreviewSrc()
+    => string.IsNullOrWhiteSpace(P_coverImageUrl) ? "/images/playlist-placeholder.png" : P_coverImageUrl!;
+
+    private async Task HandleImageUpload(InputFileChangeEventArgs e, int i)
+    {
+        uploadError = "";
+        uploadedImage = e.File;
+        string target = "";
+
+        if (i == 1)
+        {
+            target = "playlist";
+        }
+
+        if (i == 2)
+        {
+            target = "album";
+        }
+
+        try
+        {
+            // Limit size (e.g., 2 MB)
+            const long maxSize = 2 * 1024 * 1024;
+            if (uploadedImage.Size > maxSize)
+            {
+                uploadError = "Image too large (max 2 MB).";
+                return;
+            }
+
+            // Build path
+            var ext = Path.GetExtension(uploadedImage.Name);
+            var fileName = $"{Guid.NewGuid()}{ext}";
+            var relative = Path.Combine("uploads", target, fileName);            // web path: /uploads/playlists/{file}
+            var physical = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", target);
+
+            Directory.CreateDirectory(physical);
+            var physicalFile = Path.Combine(physical, fileName);
+
+            using var stream = File.Create(physicalFile);
+            await uploadedImage.OpenReadStream(maxSize).CopyToAsync(stream);
+
+            var url = "/" + relative.Replace("\\", "/"); // normalize for web
+
+            if (target == "playlist")
+            {
+                P_coverImageUrl = url;
+            }
+            else if (target == "album")
+            {
+                A_coverImageUrl = url;
+            }
+        }
+        catch (Exception ex)
+        {
+            uploadError = $"Upload failed: {ex.Message}";
+        }
+    }
+
+    private void ClearCoverImage()
+    {
+        P_coverImageUrl = null;
+        A_coverImageUrl = null;
+        uploadedImage = null;
+        uploadError = "";
+    }
+
 }
-@* Hello! Thank you for using rhythmix, a website where you can create, search and publish music! *@
-
-@* <AuthorizeView> *@
-@*     <Authorized> *@
-@*         <h2>Recently Played</h2> *@
-@*         <div style="display: flex; gap: 1rem; overflow-x: auto;"> *@
-@*             @foreach (var song in recentlyPlayed) *@
-@*             { *@
-@*                 <div style="width: 180px; text-align: center;"> *@
-@*                     <img src="@song.CoverImageUrl" alt="@song.Title" style="width: 50%; border-radius: 8px;" /> *@
-@*                     <div style="font-weight: bold;">@song.Title</div> *@
-@*                     <div style="font-size: 0.9em; color: gray;">@song.Artist</div> *@
-@*                 </div> *@
-@*             } *@
-@*         </div> *@
-@*     </Authorized> *@
-@*     <NotAuthorized> *@
-@*         <p> *@
-@*             Please <a href="Account/UserLogin">log in</a> or <a href="Account/Register">register</a> to access all features. *@
-@*         </p> *@
-@*     </NotAuthorized> *@
-@* </AuthorizeView> *@
-
-
-@* <div class="col-md-6"> *@
-@*     <h2>Search for Music</h2> *@
-
-@*     <input class="form-control" *@
-@*     placeholder="Search by title, artist, or genre" *@
-@*     @bind="searchTerm" /> *@
-
-@*     <button class="btn btn-primary mt-2" *@
-@*             @onclick="Search"> *@
-@*             Search *@
-@*     </button> *@
-
-@*     <button class="btn btn-primary mt-2" *@
-@*             @onclick="GoPlaylist"> *@
-@*         Add Playlist *@
-@*     </button> *@
-@*     <button class="btn btn-primary mt-2" *@
-@*             @onclick="ChangePlaylist"> *@
-@*         Edit Playlist *@
-@*     </button> *@
-@* </div> *@
-
-
-
-@* <div class="col-md-6"> *@
-@*     <a href="/results">Back to Full List</a> *@
-@* </div> *@
 
 
 @code {

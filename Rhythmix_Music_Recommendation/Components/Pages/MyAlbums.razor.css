@@ -1,0 +1,38 @@
+﻿.cover-image {
+    width: 200px;
+    height: 200px;
+}
+
+.custom-file-btn {
+    background: #1DB954;
+    color: white;
+    font-weight: bold;
+    padding: 8px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 0.85rem;
+}
+
+    .custom-file-btn:hover {
+        background: #d0d0d0;
+    }
+
+
+img {
+    object-fit: cover;
+}
+
+.format {
+    display: flex;
+    justify-content: space-between; /* Adjust spacing (e.g., center, flex-start) */
+    align-items: center; /* Align vertically */
+    padding: 10px;
+    background-color: #f4f4f4;
+}
+
+.left-div, .right-div {
+    width: 45%; /* Adjust width as needed */
+}

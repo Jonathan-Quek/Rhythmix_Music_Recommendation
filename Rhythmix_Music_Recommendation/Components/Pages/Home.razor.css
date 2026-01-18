@@ -1,0 +1,39 @@
+﻿/*.cover-btn {
+    background: white;
+    color: black;
+    font-weight: bold;
+    padding: 6px 16px;
+    font-size: 0.8rem;
+    border-radius: 500px;
+    border: none;
+    cursor: pointer;
+    display: block;
+    margin-left: 0;
+    margin-top: 8px;
+}*/
+
+.custom-file-btn {
+    background: white;
+    color: black;
+    font-weight: bold;
+    padding: 8px 20px;
+    border-radius: 500px;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 8px;
+}
+
+    .custom-file-btn:hover {
+        background: #d0d0d0;
+    }
+
+
+img {
+    object-fit: cover;
+}
+
+.cover-image {
+    width: 180px;
+    height: 180px;
+}

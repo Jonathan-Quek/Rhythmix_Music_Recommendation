@@ -90,6 +90,7 @@ public class MusicDataService
         {
             existing.Title = updatedPlaylist.Title;
             existing.Description = updatedPlaylist.Description;
+            existing.CoverImageUrl = updatedPlaylist.CoverImageUrl;
             context.SaveChanges();
         }
     }
@@ -103,6 +104,7 @@ public class MusicDataService
             existing.Title = updatedAlbum.Title;
             existing.Artist = updatedAlbum.Artist;
             existing.Bio = updatedAlbum.Bio;
+            existing.CoverImageUrl = updatedAlbum.CoverImageUrl;
             context.SaveChanges();
         }
     }

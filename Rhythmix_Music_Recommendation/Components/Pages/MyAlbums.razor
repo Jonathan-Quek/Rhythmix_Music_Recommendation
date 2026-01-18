@@ -40,8 +40,18 @@
                         </button>
                     </div>
 
-                    <div style="width: 100%; aspect-ratio: 1/1; background: linear-gradient(135deg, #333, #111); display: flex; justify-content: center; align-items: center; border-radius: 4px;">
-                        <i class="fa fa-id-card" style="font-size: 80px; color: #444; opacity: 0.5;"></i>
+                    <div style="width: 100%; aspect-ratio: 1/1;
+                                background: #282828;
+                                display: flex; justify-content: center; align-items: center;
+                                margin-bottom: 15px; border-radius: 4px;">
+                        @if (!string.IsNullOrEmpty(album.CoverImageUrl))
+                        {
+                            <img src="@album.CoverImageUrl" class="cover-image" alt="Playlist cover image" />
+                        }
+                        else
+                        {
+                            <i class="fa fa-music" style="font-size: 50px; color: #777;"></i>
+                        }
                     </div>
 
                     <h4 style="margin-top: 15px; margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">@album.Title</h4>
@@ -57,24 +67,78 @@
 @if (isEditing)
 {
     <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 1000;">
-        <div style="background: white; padding: 30px; border-radius: 12px; width: 450px; color: black; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+        <div style="background: white; padding: 30px; border-radius: 12px; width: 600px; color: black; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
             <h3 style="margin-top: 0; color: #1DB954; border-bottom: 1px solid #eee; padding-bottom: 10px;">Edit Album Details</h3>
+            <header class="format">
+                <div class="left-div">
+                    <div style="margin-top: 10px; min-height: 40px; display: flex; justify-content: center; align-items: center;">
+                        @if (!string.IsNullOrEmpty(editingAlbum.CoverImageUrl))
+                        {
+                            <img src="@editingAlbum.CoverImageUrl" class="cover-image" />
+                        }
+                        else
+                        {
 
-            <div style="margin-top: 20px;">
-                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Album Title</label>
-                <input @bind="editingAlbum.Title" style="width: 100%; margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" placeholder="Title" />
+                            <img src="/images/Placeholder_Image.jpg" class="cover-image" />
+                        }
+                    </div>
 
-                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Artist Name</label>
-                <input @bind="editingAlbum.Artist" style="width: 100%; margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" placeholder="Artist" />
+                    <div style=" justify-content: center">
+                        @if (!string.IsNullOrEmpty(editingAlbum.CoverImageUrl))
+                        {
+                            <button class="custom-file-btn" @onclick="ClearCoverImage">Clear Image</button>
+                        }
+                        else
+                        {
+                            <label for="fileUpload" class="custom-file-btn">Upload Image</label>
+                            <InputFile id="fileUpload" OnChange="HandleImageUpload" accept="image/*" style="display:none;" />
 
-                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Bio / Description</label>
-                <textarea @bind="editingAlbum.Bio" style="width: 100%; height: 100px; margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: none;" placeholder="Bio"></textarea>
-            </div>
+                            @if (!string.IsNullOrEmpty(uploadError))
+                            {
+                                <div>@uploadError</div>
+                            }
+                        }
+                    </div>
 
-            <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                <button @onclick="() => isEditing = false" style="background: #f0f0f0; color: #333; border: none; padding: 10px 25px; border-radius: 500px; cursor: pointer; font-weight: bold;">Cancel</button>
-                <button @onclick="SaveChanges" style="background: #1DB954; color: white; border: none; padding: 10px 25px; border-radius: 500px; cursor: pointer; font-weight: bold;">Save Changes</button>
-            </div>
+                </div>
+                <div class="right-div">
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px;">Name</label>
+                        <input @bind="editingAlbum.Title" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" />
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px;">Artist</label>
+                        <textarea @bind="editingAlbum.Artist" style="width: 100%;  padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: none;"></textarea>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 5px;">Description</label>
+                        <textarea @bind="editingAlbum.Bio" style="width: 100%; height: 100px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: none;"></textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                        <button @onclick="() => isEditing = false" style="background: #ccc; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 0.85rem;">Cancel</button>
+                        <button @onclick="SaveChanges" style="background: #1DB954; color: white; border: none; font-size: 0.85rem; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold;">Save Changes</button>
+                    </div>
+                </div>
+            </header>
+            @* <div style="margin-top: 20px;"> *@
+            @*     <label style="display: block; margin-bottom: 5px; font-weight: bold;">Album Title</label> *@
+            @*     <input @bind="editingAlbum.Title" style="width: 100%; margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" placeholder="Title" /> *@
+
+            @*     <label style="display: block; margin-bottom: 5px; font-weight: bold;">Artist Name</label> *@
+            @*     <input @bind="editingAlbum.Artist" style="width: 100%; margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" placeholder="Artist" /> *@
+
+            @*     <label style="display: block; margin-bottom: 5px; font-weight: bold;">Bio / Description</label> *@
+            @*     <textarea @bind="editingAlbum.Bio" style="width: 100%; height: 100px; margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: none;" placeholder="Bio"></textarea> *@
+            @* </div> *@
+
+            @* <div style="display: flex; gap: 10px; justify-content: flex-end;"> *@
+            @*     <button @onclick="() => isEditing = false" style="background: #f0f0f0; color: #333; border: none; padding: 10px 25px; border-radius: 500px; cursor: pointer; font-weight: bold;">Cancel</button> *@
+            @*     <button @onclick="SaveChanges" style="background: #1DB954; color: white; border: none; padding: 10px 25px; border-radius: 500px; cursor: pointer; font-weight: bold;">Save Changes</button> *@
+            @* </div> *@
         </div>
     </div>
 }
@@ -82,6 +146,9 @@
 @code {
     private bool isEditing = false;
     private Album editingAlbum = new();
+    private IBrowserFile? uploadedImage;
+    private string uploadError = "";
+
 
     private void PrepareEdit(Album a)
     {
@@ -91,7 +158,8 @@
             AlbumId = a.AlbumId,
             Title = a.Title,
             Artist = a.Artist,
-            Bio = a.Bio
+            Bio = a.Bio,
+            CoverImageUrl = a.CoverImageUrl
         };
         isEditing = true;
     }
@@ -106,6 +174,49 @@
     private void HandleDelete(Guid id)
     {
         DataService.DeleteAlbum(id);
+        StateHasChanged();
+    }
+
+    private async Task HandleImageUpload(InputFileChangeEventArgs e)
+    {
+        uploadError = "";
+        uploadedImage = e.File;
+
+        try
+        {
+            // Limit size (e.g., 2 MB)
+            const long maxSize = 2 * 1024 * 1024;
+            if (uploadedImage.Size > maxSize)
+            {
+                uploadError = "Image too large (max 2 MB).";
+                return;
+            }
+
+            // Build path
+            var ext = Path.GetExtension(uploadedImage.Name);
+            var fileName = $"{Guid.NewGuid()}{ext}";
+            var relative = Path.Combine("uploads", "album", fileName);            // web path: /uploads/playlists/{file}
+            var physical = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "album");
+
+            Directory.CreateDirectory(physical);
+            var physicalFile = Path.Combine(physical, fileName);
+
+            using var stream = File.Create(physicalFile);
+            await uploadedImage.OpenReadStream(maxSize).CopyToAsync(stream);
+
+            editingAlbum.CoverImageUrl = "/" + relative.Replace("\\", "/"); // normalize for web
+        }
+        catch (Exception ex)
+        {
+            uploadError = $"Upload failed: {ex.Message}";
+        }
+    }
+
+    private void ClearCoverImage()
+    {
+        editingAlbum.CoverImageUrl = null;
+        uploadedImage = null;
+        uploadError = "";
         StateHasChanged();
     }
 }
