@@ -362,3 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /Rhythmix_Music_Recommendation/wwwroot/uploads/playlists
+/Rhythmix_Music_Recommendation/wwwroot/uploads
