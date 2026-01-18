@@ -11,7 +11,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // 1. Database Configuration
 builder.Services.AddDbContextFactory<Rhythmix_Music_RecommendationContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Rhythmix_Music_RecommendationContext") ?? throw new InvalidOperationException("Connection string not found.")));
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Rhythmix_Music_RecommendationContext") ?? throw new InvalidOperationException("Connection string not found."));
+
+    options.EnableSensitiveDataLogging();
+}
+
+    );
+
 
 builder.Services.AddQuickGridEntityFrameworkAdapter();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -68,6 +75,8 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.MapAdditionalIdentityEndpoints();
+
+
 
 await DbInitializer.SeedSongsAsync(app.Services);
 

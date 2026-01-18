@@ -5,76 +5,38 @@
 namespace Rhythmix_Music_Recommendation.Migrations
 {
     /// <inheritdoc />
-    public partial class AddingPlaylistTable : Migration
+    public partial class UpdatingSongsAndAlbums : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "Album",
+                table: "Songs");
+
             migrationBuilder.AddColumn<int>(
-                name: "PlaylistId",
+                name: "AlbumId",
                 table: "Songs",
                 type: "int",
-                nullable: true);
+                nullable: false,
+                defaultValue: 0);
 
             migrationBuilder.CreateTable(
-                name: "Playlists",
+                name: "Albums",
                 columns: table => new
                 {
-                    PlaylistId = table.Column<int>(type: "int", nullable: false)
+                    AlbumId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MusicBrainzId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CoverImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Artist = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CoverImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReleaseYear = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Playlists", x => x.PlaylistId);
+                    table.PrimaryKey("PK_Albums", x => x.AlbumId);
                 });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "3781efa7-66dc-47f0-860f-e506d04102e4",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "751ce267-a662-4ca4-9e5c-4500acdba618", "AQAAAAIAAYagAAAAEF/nHhNsyviRSTaNERslpko+51kqRcK1tL7hlNCfXgvDLB2VosjAiui7vY4isCYIcA==", "cecc3fb9-5512-4793-9b90-c3b4a5a848e8" });
-
-            migrationBuilder.UpdateData(
-                table: "AspNetUsers",
-                keyColumn: "Id",
-                keyValue: "b1a1f4c2-4f5e-4d3b-9c3a-1e2f3a4b5c6d",
-                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "bad62bde-0b64-4f29-aa0d-48c97c789e7f", "AQAAAAIAAYagAAAAEKd8NvkSPcGPtAKCYpKDoPd6/AcN77NL49Og49ZI/KYJr8i907bu6lb08glQhJypfg==", "a75ae08d-1609-4dd8-96c8-4025e4a2fb80" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Songs_PlaylistId",
-                table: "Songs",
-                column: "PlaylistId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Songs_Playlists_PlaylistId",
-                table: "Songs",
-                column: "PlaylistId",
-                principalTable: "Playlists",
-                principalColumn: "PlaylistId");
-        }
-
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Songs_Playlists_PlaylistId",
-                table: "Songs");
-
-            migrationBuilder.DropTable(
-                name: "Playlists");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Songs_PlaylistId",
-                table: "Songs");
-
-            migrationBuilder.DropColumn(
-                name: "PlaylistId",
-                table: "Songs");
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
@@ -89,6 +51,58 @@ namespace Rhythmix_Music_Recommendation.Migrations
                 keyValue: "b1a1f4c2-4f5e-4d3b-9c3a-1e2f3a4b5c6d",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
                 values: new object[] { "0c97fd79-5bd2-4763-a2f8-d31b3f6bdb59", "AQAAAAIAAYagAAAAEMQaXYFs/3n219fj3wFonH2RSANob5GntRiVrQNavf3ImTPXe3VeQSY3vIFDec1zwA==", "f0955376-7b3c-4066-94ce-2b668aadd38a" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Songs_AlbumId",
+                table: "Songs",
+                column: "AlbumId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Songs_Albums_AlbumId",
+                table: "Songs",
+                column: "AlbumId",
+                principalTable: "Albums",
+                principalColumn: "AlbumId",
+                onDelete: ReferentialAction.Cascade);
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Songs_Albums_AlbumId",
+                table: "Songs");
+
+            migrationBuilder.DropTable(
+                name: "Albums");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Songs_AlbumId",
+                table: "Songs");
+
+            migrationBuilder.DropColumn(
+                name: "AlbumId",
+                table: "Songs");
+
+            migrationBuilder.AddColumn<string>(
+                name: "Album",
+                table: "Songs",
+                type: "nvarchar(max)",
+                nullable: true);
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "3781efa7-66dc-47f0-860f-e506d04102e4",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "10f01fef-a01d-4ff1-910b-0eed2b70ffb0", "AQAAAAIAAYagAAAAEEBG/93qe9+aqjCbI5NWKlt/YV6Bw5H+kvM9xxFSIVxL0OURbg0AsuC5jFtcP7mcGw==", "d8b2b7d5-525e-49a7-8bfa-07615af6fe87" });
+
+            migrationBuilder.UpdateData(
+                table: "AspNetUsers",
+                keyColumn: "Id",
+                keyValue: "b1a1f4c2-4f5e-4d3b-9c3a-1e2f3a4b5c6d",
+                columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
+                values: new object[] { "16fe078f-1707-4f4c-b800-42ceee94dac0", "AQAAAAIAAYagAAAAEFWlT+7CY+/bSaO+yDl70eW1GXaXepv+yns+h2nUNy4+TamYSyYP2paVKWg0qlt5gQ==", "c2aff5d3-7408-4183-88a3-f6e649bfc2cd" });
         }
     }
 }

@@ -63,7 +63,7 @@ public class MusicDataService
     public void DeletePlaylist(Guid id)
     {
         using var context = _dbFactory.CreateDbContext();
-        var playlist = context.Playlists.FirstOrDefault(p => p.Id == id);
+        var playlist = context.Playlists.FirstOrDefault(p => p.PlaylistId == id);
         if (playlist != null)
         {
             context.Playlists.Remove(playlist);
@@ -74,7 +74,7 @@ public class MusicDataService
     public void DeleteAlbum(Guid id)
     {
         using var context = _dbFactory.CreateDbContext();
-        var album = context.Albums.FirstOrDefault(a => a.Id == id);
+        var album = context.Albums.FirstOrDefault(a => a.AlbumId == id);
         if (album != null)
         {
             context.Albums.Remove(album);
@@ -85,10 +85,10 @@ public class MusicDataService
     public void UpdatePlaylist(Playlist updatedPlaylist)
     {
         using var context = _dbFactory.CreateDbContext();
-        var existing = context.Playlists.FirstOrDefault(p => p.Id == updatedPlaylist.Id);
+        var existing = context.Playlists.FirstOrDefault(p => p.PlaylistId == updatedPlaylist.PlaylistId);
         if (existing != null)
         {
-            existing.Name = updatedPlaylist.Name;
+            existing.Title = updatedPlaylist.Title;
             existing.Description = updatedPlaylist.Description;
             context.SaveChanges();
         }
@@ -97,7 +97,7 @@ public class MusicDataService
     public void UpdateAlbum(Album updatedAlbum)
     {
         using var context = _dbFactory.CreateDbContext();
-        var existing = context.Albums.FirstOrDefault(a => a.Id == updatedAlbum.Id);
+        var existing = context.Albums.FirstOrDefault(a => a.AlbumId == updatedAlbum.AlbumId);
         if (existing != null)
         {
             existing.Title = updatedAlbum.Title;

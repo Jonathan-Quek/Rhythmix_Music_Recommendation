@@ -20,7 +20,9 @@ namespace Rhythmix_Music_Recommendation.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Artist = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Genre = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ReleaseYear = table.Column<int>(type: "int", nullable: true)
+                    ReleaseYear = table.Column<int>(type: "int", nullable: true),
+                    Album = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CoverImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -32,14 +34,14 @@ namespace Rhythmix_Music_Recommendation.Migrations
                 keyColumn: "Id",
                 keyValue: "3781efa7-66dc-47f0-860f-e506d04102e4",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "9fcc7cad-a39c-4022-be5f-c4c000ce0c7c", "AQAAAAIAAYagAAAAENOrBK37JlnrIqdiP5/VW8dAlji2ncTZS5IyPyYDDsccbYDigHCTUZMRWYgeCLn1Ww==", "a07114f5-5d9f-474d-b249-e31c38015ead" });
+                values: new object[] { "10f01fef-a01d-4ff1-910b-0eed2b70ffb0", "AQAAAAIAAYagAAAAEEBG/93qe9+aqjCbI5NWKlt/YV6Bw5H+kvM9xxFSIVxL0OURbg0AsuC5jFtcP7mcGw==", "d8b2b7d5-525e-49a7-8bfa-07615af6fe87" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "b1a1f4c2-4f5e-4d3b-9c3a-1e2f3a4b5c6d",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "eeb49655-c284-4a04-9960-9387819658fa", "AQAAAAIAAYagAAAAEErwmMApyHpCBjW3wXMlUkrOAAEGNRNpVMbr+Twg9VB6+cHW5VE98idoi8uUZMPhJg==", "8d47348a-fad5-48ef-8fe4-d784b9e32e21" });
+                values: new object[] { "16fe078f-1707-4f4c-b800-42ceee94dac0", "AQAAAAIAAYagAAAAEFWlT+7CY+/bSaO+yDl70eW1GXaXepv+yns+h2nUNy4+TamYSyYP2paVKWg0qlt5gQ==", "c2aff5d3-7408-4183-88a3-f6e649bfc2cd" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Songs_MusicBrainzId",

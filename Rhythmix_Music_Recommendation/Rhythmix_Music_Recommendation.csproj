@@ -8,12 +8,61 @@
 
   <ItemGroup>
     <Compile Remove="Components\Domain\Register.cs" />
+    <Compile Remove="Migrations\20251211061223_Initial.cs" />
+    <Compile Remove="Migrations\20251211061223_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20251212061940_Userregister.cs" />
+    <Compile Remove="Migrations\20251212061940_Userregister.Designer.cs" />
+    <Compile Remove="Migrations\20251214104411_SeedDataPlease.cs" />
+    <Compile Remove="Migrations\20251214104411_SeedDataPlease.Designer.cs" />
+    <Compile Remove="Migrations\20251214112905_AddIdentity.cs" />
+    <Compile Remove="Migrations\20251214112905_AddIdentity.Designer.cs" />
+    <Compile Remove="Migrations\20251214123216_SeedUserRole.cs" />
+    <Compile Remove="Migrations\20251214123216_SeedUserRole.Designer.cs" />
+    <Compile Remove="Migrations\20260105142347_FixingSeedData.cs" />
+    <Compile Remove="Migrations\20260105142347_FixingSeedData.Designer.cs" />
     <Compile Remove="Migrations\20260112121942_SeedSongs.cs" />
     <Compile Remove="Migrations\20260112121942_SeedSongs.Designer.cs" />
+    <Compile Remove="Migrations\20260112141557_SeedSongs.cs" />
+    <Compile Remove="Migrations\20260112141557_SeedSongs.Designer.cs" />
+    <Compile Remove="Migrations\20260113161912_UpdatingSongsAndAlbums.cs" />
+    <Compile Remove="Migrations\20260113161912_UpdatingSongsAndAlbums.Designer.cs" />
     <Compile Remove="Migrations\20260114021304_AddingPlaylistTable.cs" />
     <Compile Remove="Migrations\20260114021304_AddingPlaylistTable.Designer.cs" />
     <Compile Remove="Migrations\20260114024120_AddingPlaylistRelatedTables.cs" />
     <Compile Remove="Migrations\20260114024120_AddingPlaylistRelatedTables.Designer.cs" />
+    <Compile Remove="Migrations\20260114040815_AddingPlaylistRelatedTables.cs" />
+    <Compile Remove="Migrations\20260114040815_AddingPlaylistRelatedTables.Designer.cs" />
+    <Compile Remove="Migrations\20260114044834_MakingPlaylistsPrivate.cs" />
+    <Compile Remove="Migrations\20260114044834_MakingPlaylistsPrivate.Designer.cs" />
+    <Compile Remove="Migrations\20260116041321_CreateMusicTablesFinal.cs" />
+    <Compile Remove="Migrations\20260116041321_CreateMusicTablesFinal.Designer.cs" />
+    <Compile Remove="Migrations\20260117164644_PostMergerAlbumAndPlayistsUpdate.cs" />
+    <Compile Remove="Migrations\20260117164644_PostMergerAlbumAndPlayistsUpdate.Designer.cs" />
+    <Compile Remove="Migrations\20260117181651_PostMergerAlbumAndPlaylistTableUpdate.cs" />
+    <Compile Remove="Migrations\20260117181651_PostMergerAlbumAndPlaylistTableUpdate.Designer.cs" />
+    <Compile Remove="OldMigrations\20251211061223_Initial.cs" />
+    <Compile Remove="OldMigrations\20251211061223_Initial.Designer.cs" />
+    <Compile Remove="OldMigrations\20251212061940_Userregister.cs" />
+    <Compile Remove="OldMigrations\20251212061940_Userregister.Designer.cs" />
+    <Compile Remove="OldMigrations\20251214104411_SeedDataPlease.cs" />
+    <Compile Remove="OldMigrations\20251214104411_SeedDataPlease.Designer.cs" />
+    <Compile Remove="OldMigrations\20251214112905_AddIdentity.cs" />
+    <Compile Remove="OldMigrations\20251214112905_AddIdentity.Designer.cs" />
+    <Compile Remove="OldMigrations\20251214123216_SeedUserRole.cs" />
+    <Compile Remove="OldMigrations\20251214123216_SeedUserRole.Designer.cs" />
+    <Compile Remove="OldMigrations\20260105142347_FixingSeedData.cs" />
+    <Compile Remove="OldMigrations\20260105142347_FixingSeedData.Designer.cs" />
+    <Compile Remove="OldMigrations\20260112141557_SeedSongs.cs" />
+    <Compile Remove="OldMigrations\20260112141557_SeedSongs.Designer.cs" />
+    <Compile Remove="OldMigrations\20260113161912_UpdatingSongsAndAlbums.cs" />
+    <Compile Remove="OldMigrations\20260113161912_UpdatingSongsAndAlbums.Designer.cs" />
+    <Compile Remove="OldMigrations\20260114040815_AddingPlaylistRelatedTables.cs" />
+    <Compile Remove="OldMigrations\20260114040815_AddingPlaylistRelatedTables.Designer.cs" />
+    <Compile Remove="OldMigrations\20260114044834_MakingPlaylistsPrivate.cs" />
+    <Compile Remove="OldMigrations\20260114044834_MakingPlaylistsPrivate.Designer.cs" />
+    <Compile Remove="OldMigrations\20260117181651_PostMergerAlbumAndPlaylistTableUpdate.cs" />
+    <Compile Remove="OldMigrations\20260117181651_PostMergerAlbumAndPlaylistTableUpdate.Designer.cs" />
+    <Compile Remove="OldMigrations\Rhythmix_Music_RecommendationContextModelSnapshot.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,6 +84,10 @@
 
   <ItemGroup>
     <None Include="wwwroot\images\Placeholder_Image.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="OldMigrations\" />
   </ItemGroup>
 
 </Project>

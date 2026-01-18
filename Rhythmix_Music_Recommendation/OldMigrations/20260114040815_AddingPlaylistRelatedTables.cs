@@ -16,7 +16,6 @@ namespace Rhythmix_Music_Recommendation.Migrations
                 {
                     PlaylistId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MusicBrainzId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CoverImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -54,14 +53,14 @@ namespace Rhythmix_Music_Recommendation.Migrations
                 keyColumn: "Id",
                 keyValue: "3781efa7-66dc-47f0-860f-e506d04102e4",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "c4b9eb31-bd38-4667-8945-0df6113016b2", "AQAAAAIAAYagAAAAEIFxUUaIUbsraSTRAYko8tqaYO9WFOCVo+17ToS+Z1rz3J0+SSL6u2uM3S+Ym8Tr2Q==", "e03a6c78-7505-40d1-b0d0-cd6ef033acaf" });
+                values: new object[] { "eb1404b8-6556-4193-b794-11fbef6ac0fc", "AQAAAAIAAYagAAAAELubytJTecKUTeKcO6nDEGEz+r+gd2bRW+vgPwkc4JT81G9WeEWXx1UbTNA8r1tTGg==", "56097d04-f093-497a-9845-3c2263b66f18" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "b1a1f4c2-4f5e-4d3b-9c3a-1e2f3a4b5c6d",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "33972e24-e07f-472b-b098-4d9e7fab686d", "AQAAAAIAAYagAAAAEMcY4e10lo6g4mI+45zIKqfIM/FmoMdnGDWkjxszs6a3B3V9GDdPiBu7sBzKJBMRQQ==", "4fb11075-736c-4265-9fae-6c8d179d1f1c" });
+                values: new object[] { "2a05c5d6-c37f-4f07-b279-f510c28990ea", "AQAAAAIAAYagAAAAEDnJUwcTaL7Am1OxKnkJfEcUtaLiUsyhE0SPPlmr3uLGOzUOqK317O0OxaycxOwFsw==", "8b79c89e-60ed-4bad-b483-88cd20979802" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_PlaylistSongs_SongId",

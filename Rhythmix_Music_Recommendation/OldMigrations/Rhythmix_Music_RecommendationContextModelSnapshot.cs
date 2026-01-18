@@ -202,9 +202,6 @@ namespace Rhythmix_Music_Recommendation.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ReleaseYear")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -471,7 +468,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "74d7dc50-d3ef-4b64-a4f2-6eb35efd5cb0",
+                            ConcurrencyStamp = "98d93fb7-e635-4ee0-894d-a436bce671ba",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -479,9 +476,9 @@ namespace Rhythmix_Music_Recommendation.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEM7rZxmGW1cm18Ndc3kHGj2ZIaj1BPc9rZYTyr+J9GWWzEsfVMlWj3iznMoyZ9Ruw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFtPhaHuh5RgfZTcPJkWfp2gGdObGRMm/uP9GSXOOXSQpldGPKckMljAhczSFPghbA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a1b99c2f-0b89-4345-90b3-33bd5f054071",
+                            SecurityStamp = "47f244b1-7305-465e-9f4d-9f8b027cf0bf",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         },
@@ -489,7 +486,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
                         {
                             Id = "b1a1f4c2-4f5e-4d3b-9c3a-1e2f3a4b5c6d",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "34442f92-4658-4868-9b83-4d9cc7fbcccb",
+                            ConcurrencyStamp = "eb840bb6-6882-4a38-9fcd-1707489bbd5b",
                             Email = "test@mail.com",
                             EmailConfirmed = true,
                             FirstName = "John",
@@ -497,9 +494,9 @@ namespace Rhythmix_Music_Recommendation.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "TEST@MAIL.COM",
                             NormalizedUserName = "TEST@MAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMOdccYp/ZnI9NkUNjj4BiXynKFbppo/lXVGq3bcjq9b4QlEMA9T0f+H7B9RxnBe1Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOfy6tmBmtsWR8oqqfeGEs+KuN1xWRZ3J0WgP7jPjZNLDRiUb3No9CO4oBSxz7fSbA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6bc627db-659b-4d2a-9eb7-4d9b1041e0cc",
+                            SecurityStamp = "33d958a2-4ed0-407b-aeb4-1ab0cc421184",
                             TwoFactorEnabled = false,
                             UserName = "test@mail.com"
                         });

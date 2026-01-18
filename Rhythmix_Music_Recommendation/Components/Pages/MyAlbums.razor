@@ -33,7 +33,7 @@
                         </button>
 
                         @* Delete Button - Red *@
-                        <button @onclick="() => HandleDelete(album.Id)"
+                        <button @onclick="() => HandleDelete(album.AlbumId)"
                                 style="background: #dc3545; border: none; color: white; border-radius: 4px; padding: 5px; cursor: pointer;"
                                 title="Delete Album">
                             <i class="fa fa-trash"></i>
@@ -88,7 +88,7 @@
         // Creating a clone so the UI doesn't update until 'Save' is clicked
         editingAlbum = new Album
         {
-            Id = a.Id,
+            AlbumId = a.AlbumId,
             Title = a.Title,
             Artist = a.Artist,
             Bio = a.Bio

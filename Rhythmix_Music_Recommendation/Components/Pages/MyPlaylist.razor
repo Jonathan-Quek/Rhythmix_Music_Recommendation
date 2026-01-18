@@ -33,7 +33,7 @@
                         </button>
 
                         @* Delete Button *@
-                        <button @onclick="() => HandleDelete(playlist.Id)"
+                        <button @onclick="() => HandleDelete(playlist.PlaylistId)"
                                 style="background: #dc3545; border: none; color: white; border-radius: 4px; padding: 5px; cursor: pointer;"
                                 title="Delete Playlist">
                             <i class="fa fa-trash"></i>
@@ -43,7 +43,7 @@
                     <div style="width: 100%; aspect-ratio: 1/1; background: #282828; display: flex; justify-content: center; align-items: center; margin-bottom: 15px;">
                         <i class="fa fa-music" style="font-size: 60px; color: #555;"></i>
                     </div>
-                    <h4>@playlist.Name</h4>
+                    <h4>@playlist.Title</h4>
                     <p style="color: #b3b3b3; font-size: 0.8rem; height: 3em; overflow: hidden; text-overflow: ellipsis;">@playlist.Description</p>
                 </div>
             }
@@ -60,7 +60,7 @@
 
             <div style="margin-bottom: 15px;">
                 <label style="display: block; font-weight: bold; margin-bottom: 5px;">Name</label>
-                <input @bind="editingPlaylist.Name" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" />
+                <input @bind="editingPlaylist.Title" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" />
             </div>
 
             <div style="margin-bottom: 20px;">
@@ -85,8 +85,8 @@
         // We create a "Clone" so changes don't show on the main page until we hit Save
         editingPlaylist = new Playlist
         {
-            Id = p.Id,
-            Name = p.Name,
+            PlaylistId = p.PlaylistId,
+            Title = p.Title,
             Description = p.Description
         };
         isEditing = true;

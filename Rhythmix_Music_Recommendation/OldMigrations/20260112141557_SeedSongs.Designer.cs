@@ -12,7 +12,7 @@ using Rhythmix_Music_Recommendation.Data;
 namespace Rhythmix_Music_Recommendation.Migrations
 {
     [DbContext(typeof(Rhythmix_Music_RecommendationContext))]
-    [Migration("20260112121942_SeedSongs")]
+    [Migration("20260112141557_SeedSongs")]
     partial class SeedSongs
     {
         /// <inheritdoc />
@@ -192,8 +192,14 @@ namespace Rhythmix_Music_Recommendation.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SongId"));
 
+                    b.Property<string>("Album")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Artist")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CoverImageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Genre")
@@ -390,7 +396,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9fcc7cad-a39c-4022-be5f-c4c000ce0c7c",
+                            ConcurrencyStamp = "10f01fef-a01d-4ff1-910b-0eed2b70ffb0",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -398,9 +404,9 @@ namespace Rhythmix_Music_Recommendation.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAENOrBK37JlnrIqdiP5/VW8dAlji2ncTZS5IyPyYDDsccbYDigHCTUZMRWYgeCLn1Ww==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEBG/93qe9+aqjCbI5NWKlt/YV6Bw5H+kvM9xxFSIVxL0OURbg0AsuC5jFtcP7mcGw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a07114f5-5d9f-474d-b249-e31c38015ead",
+                            SecurityStamp = "d8b2b7d5-525e-49a7-8bfa-07615af6fe87",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         },
@@ -408,7 +414,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
                         {
                             Id = "b1a1f4c2-4f5e-4d3b-9c3a-1e2f3a4b5c6d",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "eeb49655-c284-4a04-9960-9387819658fa",
+                            ConcurrencyStamp = "16fe078f-1707-4f4c-b800-42ceee94dac0",
                             Email = "test@mail.com",
                             EmailConfirmed = true,
                             FirstName = "John",
@@ -416,9 +422,9 @@ namespace Rhythmix_Music_Recommendation.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "TEST@MAIL.COM",
                             NormalizedUserName = "TEST@MAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEErwmMApyHpCBjW3wXMlUkrOAAEGNRNpVMbr+Twg9VB6+cHW5VE98idoi8uUZMPhJg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFWlT+7CY+/bSaO+yDl70eW1GXaXepv+yns+h2nUNy4+TamYSyYP2paVKWg0qlt5gQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8d47348a-fad5-48ef-8fe4-d784b9e32e21",
+                            SecurityStamp = "c2aff5d3-7408-4183-88a3-f6e649bfc2cd",
                             TwoFactorEnabled = false,
                             UserName = "test@mail.com"
                         });

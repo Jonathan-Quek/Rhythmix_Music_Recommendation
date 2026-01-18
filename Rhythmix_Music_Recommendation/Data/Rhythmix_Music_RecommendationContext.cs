@@ -42,11 +42,15 @@ namespace Rhythmix_Music_Recommendation.Data
             builder.ApplyConfiguration(new UserRoleSeed());
             builder.ApplyConfiguration(new WorkingUserSeed());
 
-            builder.ApplyConfiguration(new WorkingUserSeed());
-
             builder.Entity<Song>()
                 .HasIndex(s => s.MusicBrainzId)
                 .IsUnique();
+
+            builder.Entity<PlaylistSongs>()
+                .HasOne(ps => ps.Playlist)
+                .WithMany(p => p.PlaylistSongs)
+                .HasForeignKey(ps => ps.PlaylistId);
+
 
             base.OnModelCreating(builder);
 

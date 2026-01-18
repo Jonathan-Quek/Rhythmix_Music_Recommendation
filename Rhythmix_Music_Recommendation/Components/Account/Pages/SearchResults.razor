@@ -12,8 +12,11 @@
 @inject IHttpClientFactory HttpClientFactory
 @inject Rhythmix_Music_RecommendationContext DbContext
 
-<h2>Search Results</h2>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+
+
+<h2>Search Results</h2>
 <div>
 
     <input class="form-control"
@@ -50,10 +53,10 @@
 
 @if (selectedMode == SearchMode.Songs && songResults.Any())
 {
-    <div class="songlist">
+    <div class="song-album-list">
         @foreach (var song in songResults)
         {
-            <div class="songrow" title="@($"{song.Title} - {song.Artist}")">
+            <div class="song-album-row" title="@($"{song.Title} - {song.Artist}")">
                 <img src="@song.CoverImageUrl"
                      alt="@song.Title"
                      style="width:128px;height:128px;object-fit:cover;border-radius:8px;"
@@ -74,7 +77,7 @@ else if (selectedMode == SearchMode.Albums && albumResults.Any())
 {
     @foreach (var album in albumResults)
     {
-        @* <div class="songrow">
+        <div class="song-album-row">
             <img src="@album.CoverImageUrl"
                  alt="@album.Title"
                  style="width:128px;height:128px;object-fit:cover;border-radius:8px;"
@@ -85,7 +88,7 @@ else if (selectedMode == SearchMode.Albums && albumResults.Any())
                 <div class="artist">@album.Artist</div>
                 <div class="col-right year">@album.ReleaseYear</div>
             </div>
-        </div> *@
+        </div>
     }
 }
 else if (selectedMode == SearchMode.Artists && artistResults.Any())

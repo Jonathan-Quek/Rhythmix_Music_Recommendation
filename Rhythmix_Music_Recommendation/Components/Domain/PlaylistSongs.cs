@@ -2,7 +2,7 @@
 
 public class PlaylistSongs
 {
-    public int PlaylistId { get; set; }
+    public Guid PlaylistId { get; set; }
     public Playlist Playlist { get; set; } = default!;
 
     public int SongId { get; set; }

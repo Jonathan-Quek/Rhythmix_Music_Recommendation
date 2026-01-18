@@ -19,8 +19,13 @@
 
         <div class="search-container" style="margin-top: 30px; position: relative; display: flex; align-items: center;">
             <i class="fa fa-search" style="position: absolute; left: 20px; font-size: 25px; color: #555;"></i>
-            <input type="text" class="rhythmix-search-input" placeholder="Search..."
-                   style="width: 100%; max-width: 900px; height: 75px; border: 3px solid black; padding: 5px 20px 5px 60px; font-size: 1.5rem;" />
+            <EditForm Model= "@searchModel" OnValidSubmit="Search" FormName="SearchForm">
+                <InputText class="rhythmix-search-input" placeholder="Search..."
+                       style="width: 100%; max-width: 900px; height: 75px; border: 3px solid black; padding: 5px 20px 5px 60px; font-size: 1.5rem;"
+                       @bind-Value="searchModel.Query"/>
+
+            </EditForm>
+            
         </div>
     </div>
 
@@ -114,13 +119,27 @@
     private void OpenAlbumModal() { showAlbumModal = true; }
     private void CloseAlbumModal() { showAlbumModal = false; }
 
+    private SearchModel searchModel = new SearchModel();
+
+    private void Search()
+    {
+        var encoded = Uri.EscapeDataString(searchModel.Query);
+        NavigationManager.NavigateTo($"/results?query={encoded}");
+    }
+
+    public class SearchModel
+    {
+        public string Query { get; set; } = string.Empty;
+    }
+
+
     private void SavePlaylist()
     {
         // Added Id = Guid.NewGuid() so Delete/Edit can find this specific item
         var newP = new Playlist
         {
-            Id = Guid.NewGuid(),
-            Name = playlistName,
+            PlaylistId = Guid.NewGuid(),
+            Title = playlistName,
             Description = playlistDesc
         };
 
@@ -136,7 +155,7 @@
         // Added Id = Guid.NewGuid() so Delete/Edit can find this specific item
         var newA = new Album
         {
-            Id = Guid.NewGuid(),
+            AlbumId = Guid.NewGuid(),
             Title = albumName,
             Artist = albumArtist,
             Bio = albumDesc
@@ -150,51 +169,51 @@
         showAlbumModal = false;
     }
 }
-Hello! Thank you for using rhythmix, a website where you can create, search and publish music!
+@* Hello! Thank you for using rhythmix, a website where you can create, search and publish music! *@
 
-<AuthorizeView>
-    <Authorized>
-        <h2>Recently Played</h2>
-        <div style="display: flex; gap: 1rem; overflow-x: auto;">
-            @foreach (var song in recentlyPlayed)
-            {
-                <div style="width: 180px; text-align: center;">
-                    <img src="@song.CoverImageUrl" alt="@song.Title" style="width: 50%; border-radius: 8px;" />
-                    <div style="font-weight: bold;">@song.Title</div>
-                    <div style="font-size: 0.9em; color: gray;">@song.Artist</div>
-                </div>
-            }
-        </div>
-    </Authorized>
-    <NotAuthorized>
-        <p>
-            Please <a href="Account/UserLogin">log in</a> or <a href="Account/Register">register</a> to access all features.
-        </p>
-    </NotAuthorized>
-</AuthorizeView>
+@* <AuthorizeView> *@
+@*     <Authorized> *@
+@*         <h2>Recently Played</h2> *@
+@*         <div style="display: flex; gap: 1rem; overflow-x: auto;"> *@
+@*             @foreach (var song in recentlyPlayed) *@
+@*             { *@
+@*                 <div style="width: 180px; text-align: center;"> *@
+@*                     <img src="@song.CoverImageUrl" alt="@song.Title" style="width: 50%; border-radius: 8px;" /> *@
+@*                     <div style="font-weight: bold;">@song.Title</div> *@
+@*                     <div style="font-size: 0.9em; color: gray;">@song.Artist</div> *@
+@*                 </div> *@
+@*             } *@
+@*         </div> *@
+@*     </Authorized> *@
+@*     <NotAuthorized> *@
+@*         <p> *@
+@*             Please <a href="Account/UserLogin">log in</a> or <a href="Account/Register">register</a> to access all features. *@
+@*         </p> *@
+@*     </NotAuthorized> *@
+@* </AuthorizeView> *@
 
 
-<div class="col-md-6">
-    <h2>Search for Music</h2>
+@* <div class="col-md-6"> *@
+@*     <h2>Search for Music</h2> *@
 
-    <input class="form-control"
-    placeholder="Search by title, artist, or genre"
-    @bind="searchTerm" />
+@*     <input class="form-control" *@
+@*     placeholder="Search by title, artist, or genre" *@
+@*     @bind="searchTerm" /> *@
 
-    <button class="btn btn-primary mt-2"
-            @onclick="Search">
-            Search
-    </button>
+@*     <button class="btn btn-primary mt-2" *@
+@*             @onclick="Search"> *@
+@*             Search *@
+@*     </button> *@
 
-    <button class="btn btn-primary mt-2"
-            @onclick="GoPlaylist">
-        Add Playlist
-    </button>
-    <button class="btn btn-primary mt-2"
-            @onclick="ChangePlaylist">
-        Edit Playlist
-    </button>
-</div>
+@*     <button class="btn btn-primary mt-2" *@
+@*             @onclick="GoPlaylist"> *@
+@*         Add Playlist *@
+@*     </button> *@
+@*     <button class="btn btn-primary mt-2" *@
+@*             @onclick="ChangePlaylist"> *@
+@*         Edit Playlist *@
+@*     </button> *@
+@* </div> *@
 
 
 
@@ -205,42 +224,32 @@ Hello! Thank you for using rhythmix, a website where you can create, search and 
 
 @code {
 
-    private string searchTerm = string.Empty;
 
-    private void Search()
-    {
-        if (!string.IsNullOrWhiteSpace(searchTerm))
-        {
-            var encoded = Uri.EscapeDataString(searchTerm);
-            NavigationManager.NavigateTo($"/results?query={encoded}");
-        }
-    }
-
-    private void GoPlaylist()
-    {
-            NavigationManager.NavigateTo($"/playlists/create");
+    // private void GoPlaylist()
+    // {
+    //         NavigationManager.NavigateTo($"/playlists/create");
         
-    }
+    // }
 
-    private void ChangePlaylist()
-    {
-        NavigationManager.NavigateTo($"/playlists");
+    // private void ChangePlaylist()
+    // {
+    //     NavigationManager.NavigateTo($"/playlists");
 
-    }
+    // }
 
 
     // Example: Replace with your own logic or bind to a database/service
-    private List<Song> recentlyPlayed = new()
-    {
-        new Song { Title = "Song A", Artist = "Artist 1", CoverImageUrl = "https://coverartarchive.org/release/4bbf56b8-6aa0-4988-8aec-9b92eb65a9f6/front" },
-        new Song { Title = "Song B", Artist = "Artist 2", CoverImageUrl = "https://via.placeholder.com/150" },
-        new Song { Title = "Song C", Artist = "Artist 3", CoverImageUrl = "https://via.placeholder.com/150" },
-        new Song { Title = "Song D", Artist = "Artist 4", CoverImageUrl = "https://via.placeholder.com/150" },
-        new Song { Title = "Song E", Artist = "Artist 5", CoverImageUrl = "https://via.placeholder.com/150" },
-        new Song { Title = "Song F", Artist = "Artist 6", CoverImageUrl = "https://via.placeholder.com/150" },
+    // private List<Song> recentlyPlayed = new()
+    // {
+    //     new Song { Title = "Song A", Artist = "Artist 1", CoverImageUrl = "https:coverartarchive.org/release/4bbf56b8-6aa0-4988-8aec-9b92eb65a9f6/front" },
+    //     new Song { Title = "Song B", Artist = "Artist 2", CoverImageUrl = "https:via.placeholder.com/150" },
+    //     new Song { Title = "Song C", Artist = "Artist 3", CoverImageUrl = "https:via.placeholder.com/150" },
+    //     new Song { Title = "Song D", Artist = "Artist 4", CoverImageUrl = "https:via.placeholder.com/150" },
+    //     new Song { Title = "Song E", Artist = "Artist 5", CoverImageUrl = "https:via.placeholder.com/150" },
+    //     new Song { Title = "Song F", Artist = "Artist 6", CoverImageUrl = "https:via.placeholder.com/150" },
 
 
-    };
+    // };
 
     
 }

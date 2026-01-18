@@ -23,7 +23,7 @@ namespace Rhythmix_Music_Recommendation.Data
                 "SMSS/1.0 (jonathanquek14@hotmail.com)"
             );
 
-            var lim = 2;
+            var lim = 1;
 
             var genreSeeds = new Dictionary<string, int>
             {
@@ -70,42 +70,42 @@ namespace Rhythmix_Music_Recommendation.Data
                     using var tracksDoc = JsonDocument.Parse(tracksResponse);
                     var recordings = tracksDoc.RootElement.GetProperty("recordings");
 
-                    //var album = new Album
-                    //{
-                    //    MusicBrainzId = albumId,
-                    //    Title = albumTitle,
-                    //    Artist = artist,
-                    //    CoverImageUrl = coverUrl,
-                    //    ReleaseYear = releaseYear
-                    //};
+                    var album = new Album
+                    {
+                        MusicBrainzId = albumId,
+                        Title = albumTitle,
+                        Artist = artist,
+                        CoverImageUrl = coverUrl,
+                        ReleaseYear = releaseYear
+                    };
 
                     foreach (var r in recordings.EnumerateArray())
                     {
                         var songTitle = r.GetProperty("title").GetString();
 
 
-                        //        var song = new Song
-                        //        {
-                        //            MusicBrainzId = r.GetProperty("id").GetString(),
-                        //            Title = songTitle,
-                        //            Artist = r.GetProperty("artist-credit")[0].GetProperty("name").GetString(),
-                        //            Genre = genre,
-                        //            ReleaseYear = releaseYear,
-                        //            CoverImageUrl = coverUrl,
-                        //            Album = album
-                        //        };
-                        //        album.Songs.Add(song);
-                        //    }
-                        //await Task.Delay(1000); // To respect rate limiting
-
-
-                        //context.Albums.Add(album);
-
-
-
+                        var song = new Song
+                        {
+                            MusicBrainzId = r.GetProperty("id").GetString(),
+                            Title = songTitle,
+                            Artist = r.GetProperty("artist-credit")[0].GetProperty("name").GetString(),
+                            Genre = genre,
+                            ReleaseYear = releaseYear,
+                            CoverImageUrl = coverUrl,
+                            Album = album
+                        };
+                        album.Songs.Add(song);
                     }
+                    await Task.Delay(1000); // To respect rate limiting
 
-                    await Task.Delay(1000);
+
+                    context.Albums.Add(album);
+
+
+
+                }
+
+                await Task.Delay(1000);
 
                 }
                 await context.SaveChangesAsync();
@@ -117,6 +117,6 @@ namespace Rhythmix_Music_Recommendation.Data
 
         }
     }
-}
+
 
 
