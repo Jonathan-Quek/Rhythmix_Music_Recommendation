@@ -3,6 +3,7 @@
 @using Rhythmix_Music_Recommendation.Components.Domain
 @rendermode InteractiveServer
 @inject MusicDataService DataService
+@inject NavigationManager NavigationManager
 
 <PageTitle>My Playlists</PageTitle>
 
@@ -33,25 +34,27 @@
                         </button>
 
                         @* Delete Button *@
-                        <button @onclick="() => HandleDelete(playlist.PlaylistId)"
+                        <button @onclick="() => ShowDeleteConfirm(playlist.PlaylistId)"
                                 style="background: #dc3545; border: none; color: white; border-radius: 4px; padding: 5px; cursor: pointer;"
                                 title="Delete Playlist">
                             <i class="fa fa-trash"></i>
                         </button>
-                    </div>
 
-                    <div style="width: 100%; aspect-ratio: 1/1; background: #282828; display: flex; justify-content: center; align-items: center; margin-bottom: 15px;">
-                        @if (!string.IsNullOrEmpty(playlist.CoverImageUrl))
-                        {
-                            <img src="@playlist.CoverImageUrl" class="cover-image" alt="Playlist cover image" />
-                        }
-                        else
-                        {
-                            <i class="fa fa-music" style="font-size: 50px; color: #777;"></i>
-                        }
                     </div>
-                    <h4>@playlist.Title</h4>
-                    <p style="color: #b3b3b3; font-size: 0.8rem; height: 3em; overflow: hidden; text-overflow: ellipsis;">@playlist.Description</p>
+                    <div @onclick="() => GoToPlaylist(playlist)" style="cursor: pointer;">
+                        <div style="width: 100%; aspect-ratio: 1/1; background: #282828; display: flex; justify-content: center; align-items: center; margin-bottom: 15px;">
+                            @if (!string.IsNullOrEmpty(playlist.CoverImageUrl))
+                            {
+                                <img src="@playlist.CoverImageUrl" class="cover-image" alt="Playlist cover image" />
+                            }
+                            else
+                            {
+                                <i class="fa fa-music" style="font-size: 50px; color: #777;"></i>
+                            }
+                        </div>
+                        <h4>@playlist.Title</h4>
+                        <p style="color: #b3b3b3; font-size: 0.8rem; height: 3em; overflow: hidden; text-overflow: ellipsis;">@playlist.Description</p>
+                    </div>
                 </div>
             }
         </div>
@@ -120,12 +123,37 @@
     </div>
 }
 
+@if (showDeleteConfirm)
+{
+    <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 9999;">
+        <div style="background: #fff; color: #222; padding: 32px; border-radius: 12px; min-width: 320px; box-shadow: 0 4px 24px rgba(0,0,0,0.18);">
+            <h3>Delete Playlist?</h3>
+            <p>Are you sure you want to delete this playlist? This action cannot be undone.</p>
+            <div style="display: flex; gap: 16px; justify-content: flex-end; margin-top: 24px;">
+                <button @onclick="ConfirmDelete" style="background: #dc3545; color: white; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold;">Delete</button>
+                <button @onclick="() => showDeleteConfirm = false" style="background: #ccc; color: #222; border: none; padding: 10px 24px; border-radius: 6px;">Cancel</button>
+            </div>
+        </div>
+    </div>
+}
+
+
 @code {
     private bool isEditing = false;
     private Playlist editingPlaylist = new();
 
     private string uploadError = "";
     private IBrowserFile? uploadedImage;
+
+    private bool showDeleteConfirm = false;
+    private Guid playlistToDelete;
+
+
+    private void GoToPlaylist(Playlist playlist)
+    {
+        NavigationManager.NavigateTo($"/playlist/{playlist.PlaylistId}");
+    }
+
 
     private void PrepareEdit(Playlist p)
     {
@@ -196,4 +224,17 @@
         uploadError = "";
         StateHasChanged();
     }
+
+    private void ShowDeleteConfirm(Guid id)
+    {
+        playlistToDelete = id;
+        showDeleteConfirm = true;
+    }
+
+    private void ConfirmDelete()
+    {
+        HandleDelete(playlistToDelete);
+        showDeleteConfirm = false;
+    }
+
 }

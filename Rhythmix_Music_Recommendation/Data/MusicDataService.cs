@@ -44,7 +44,7 @@ public class MusicDataService
         return context.Albums.Where(a => a.UserId == userId).ToList();
     }
 
-    public void AddPlaylist(Playlist p)
+    public async Task AddPlaylist(Playlist p)
     {
         using var context = _dbFactory.CreateDbContext();
         p.UserId = GetCurrentUserId(); // Tag it with the user's ID
@@ -108,4 +108,5 @@ public class MusicDataService
             context.SaveChanges();
         }
     }
+
 }

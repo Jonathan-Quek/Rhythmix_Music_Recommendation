@@ -1,0 +1,135 @@
+﻿@page "/playlist/{PlaylistId:guid}"
+@using Rhythmix_Music_Recommendation.Services
+@using Rhythmix_Music_Recommendation.Components.Domain
+@using Microsoft.EntityFrameworkCore
+@using Rhythmix_Music_Recommendation.Data
+@inject MusicDataService DataService
+@inject Rhythmix_Music_RecommendationContext DbContext
+
+@rendermode InteractiveServer
+
+
+
+@if (playlist == null)
+{
+    <p>Playlist not found.</p>
+}
+else
+{
+    <div @onclick="CloseSongMenu">
+        <div class="playlist-details-header">
+            <div class="playlist-cover-box">
+                @if (!string.IsNullOrEmpty(playlist.CoverImageUrl))
+                {
+                    <img src="@playlist.CoverImageUrl" alt="Playlist cover" class="playlist-cover-img" />
+                }
+                else
+                {
+                    <img src="/images/Placeholder_Image.jpg" alt="No cover" class="playlist-cover-img" />
+                }
+            </div>
+            <div class="playlist-header-info">
+                <h2>@playlist.Title</h2>
+                <p>@playlist.Description</p>
+            </div>
+        </div>
+
+        @if (playlist.PlaylistSongs == null || !playlist.PlaylistSongs.Any())
+        {
+            <p style="color: #aaa;">No songs in this playlist yet.</p>
+        }
+        else
+        {
+            <div class="song-list">
+                @foreach (var ps in playlist.PlaylistSongs)
+                {
+                    var song = ps.Song;
+                    <div class="song-row" title="@($"{song.Title} – {song.Artist}")">
+                        <img class="song-cover"
+                             src="@song.CoverImageUrl"
+                             alt="@song.Title"
+                             onerror="this.onerror=null;this.src='/images/Placeholder_Image.jpg';" />
+
+                        <div class="song-main">
+                            <div class="song-title">@song.Title</div>
+                            <div class="song-artist">@song.Artist</div>
+                        </div>
+
+                        <div class="song-meta">
+                            <span class="song-album">@song.Album?.Title</span>
+                            <span class="song-genre">@song.Genre</span>
+                        </div>
+
+                        <div class="menu-anchor" @onclick:stopPropagation="true">
+                            <button type="button"
+                                    class="dots-btn"
+                                    title="More"
+                                    @onclick:stopPropagation="true"
+                                    @onclick="() => ToggleSongMenu(ps.SongId)">
+                                ⋮
+                            </button>
+                            @if (openMenuSongId == ps.SongId)
+                            {
+                                <div class="coontext-menu context-menu-left"
+                                     role="menu"
+                                     @onclick:stopPropagation="true">
+                                    <button type="button"
+                                            class="menu-item"
+                                            role="menuitem"
+                                            @onclick="() => RemoveSongFromPlaylist(ps.SongId)">
+                                        🗑️ Remove from playlist
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                }
+        </div>
+    }
+    </div>
+}
+
+
+@code {
+    [Parameter]
+    public Guid PlaylistId { get; set; }
+
+    private Playlist? playlist;
+
+    private int? openMenuSongId = null;
+
+    private void ToggleSongMenu(int songId)
+    {
+        openMenuSongId = (openMenuSongId == songId) ? null : songId;
+    }
+
+    private void CloseSongMenu()
+    {
+        openMenuSongId = null;
+    }
+
+    private async Task RemoveSongFromPlaylist(int songId)
+    {
+        var ps = playlist?.PlaylistSongs?.FirstOrDefault(x => x.SongId == songId);
+        if (ps != null)
+        {
+            DbContext.PlaylistSongs.Remove(ps);
+            await DbContext.SaveChangesAsync();
+            playlist.PlaylistSongs.Remove(ps);
+            StateHasChanged();
+        }
+        openMenuSongId = null;
+    }
+
+
+    protected override void OnInitialized()
+    {
+        playlist = DbContext.Playlists
+            .Include(p => p.PlaylistSongs!)
+                .ThenInclude(ps => ps.Song)
+            .FirstOrDefault(p => p.PlaylistId == PlaylistId);
+    }
+
+
+}

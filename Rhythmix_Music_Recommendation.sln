@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 18
-VisualStudioVersion = 18.0.11222.15 d18.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35913.81 d17.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhythmix_Music_Recommendation", "Rhythmix_Music_Recommendation\Rhythmix_Music_Recommendation.csproj", "{91877DD9-AA15-4C96-9E4B-0AC07FC905E0}"
 EndProject
