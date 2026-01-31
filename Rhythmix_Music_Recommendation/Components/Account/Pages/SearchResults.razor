@@ -29,9 +29,9 @@
     <div>
 
         <input class="form-control"
-        placeholder="Search by title, artist, genre, album, or year"
-        @bind="searchInput"
-        @bind:event="oninput" />
+               placeholder="Search by title, artist, genre, album, or year"
+               @bind="searchInput"
+               @bind:event="oninput" />
 
         <button class="btn btn-primary mt-2" @onclick="OnSearch" style="border-radius: 16px;">
             Search
@@ -44,17 +44,17 @@
 
     <div class="search-filters mt-2">
         <button class="filter-btn @(selectedMode == SearchMode.Songs ? "active" : "")"
-        @onclick="() => selectedMode = SearchMode.Songs">
+                @onclick="() => selectedMode = SearchMode.Songs">
             Song
         </button>
 
         <button class="filter-btn @(selectedMode == SearchMode.Albums ? "active" : "")"
-        @onclick="() => selectedMode = SearchMode.Albums">
+                @onclick="() => selectedMode = SearchMode.Albums">
             Albums
         </button>
 
         <button class="filter-btn @(selectedMode == SearchMode.Artists ? "active" : "")"
-        @onclick="() => selectedMode = SearchMode.Artists">
+                @onclick="() => selectedMode = SearchMode.Artists">
             Artists
         </button>
     </div>
@@ -74,8 +74,8 @@
                     <!-- Song preview (make it look nice like your theme) -->
                     <div style="display:flex; gap:12px; align-items:center;">
                         <img src="@selectedSong.CoverImageUrl"
-                        onerror="this.onerror=null;this.src='/images/Placeholder_Image.jpg';"
-                        style="width:48px;height:48px;border-radius:6px;object-fit:cover;" />
+                             onerror="this.onerror=null;this.src='/images/Placeholder_Image.jpg';"
+                             style="width:48px;height:48px;border-radius:6px;object-fit:cover;" />
 
                         <div style="min-width:0;">
                             <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
@@ -100,8 +100,8 @@
                             @foreach (var playlist in userPlaylists)
                             {
                                 <button type="button"
-                                @onclick="() => AddSongToPlaylist(playlist.PlaylistId)"
-                                style="
+                                        @onclick="() => AddSongToPlaylist(playlist.PlaylistId)"
+                                        style="
                                         background:#3e3e3e;
                                         border:none;
                                         color:white;
@@ -117,8 +117,8 @@
 
                     <!-- Create new playlist -->
                     <button type="button"
-                    @onclick="OpenCreatePlaylistModal"
-                    style="
+                            @onclick="OpenCreatePlaylistModal"
+                            style="
                             background:transparent;
                             border:1px solid rgba(255,255,255,0.18);
                             color:white;
@@ -205,9 +205,9 @@
                 <div class="song-row" title="@($"{song.Title} – {song.Artist}")">
 
                     <img class="song-cover"
-                    src="@song.CoverImageUrl"
-                    alt="@song.Title"
-                    onerror="this.onerror=null;this.src='/images/Placeholder_Image.jpg';" />
+                         src="@song.CoverImageUrl"
+                         alt="@song.Title"
+                         onerror="this.onerror=null;this.src='/images/Placeholder_Image.jpg';" />
 
                     <div class="song-main">
                         <div class="song-title">@song.Title</div>
@@ -225,30 +225,30 @@
                         <div class="menu-anchor" @onclick:stopPropagation="true">
 
                             <button type="button"
-                            class="dots-btn"
-                            title="More"
-                            @onclick:stopPropagation="true"
-                            @onclick="() => ToggleSongMenu(song)">
+                                    class="dots-btn"
+                                    title="More"
+                                    @onclick:stopPropagation="true"
+                                    @onclick="() => ToggleSongMenu(song)">
                                 ⋮
                             </button>
 
                             @if (openMenuSongId == song.SongId)
                             {
                                 <div class="context-menu context-menu-left"
-                                role="menu"
-                                @onclick:stopPropagation="true">
+                                     role="menu"
+                                     @onclick:stopPropagation="true">
 
                                     <button type="button"
-                                    class="menu-item"
-                                    role="menuitem"
-                                    @onclick="() => MenuAddToPlaylist(song)">
+                                            class="menu-item"
+                                            role="menuitem"
+                                            @onclick="() => MenuAddToPlaylist(song)">
                                         ➕ Add to playlist
                                     </button>
 
                                     <button type="button"
-                                    class="menu-item"
-                                    role="menuitem"
-                                    @onclick="() => MenuCreatePlaylist(song)">
+                                            class="menu-item"
+                                            role="menuitem"
+                                            @onclick="() => MenuCreatePlaylist(song)">
                                         📁 Create playlist
                                     </button>
                                 </div>
@@ -274,9 +274,9 @@
                 <div class="album-row" title="@album.Title">
 
                     <img class="album-cover"
-                    src="@album.CoverImageUrl"
-                    alt="@album.Title"
-                    onerror="this.onerror=null;this.src='/images/Placeholder_Image.jpg';" />
+                         src="@album.CoverImageUrl"
+                         alt="@album.Title"
+                         onerror="this.onerror=null;this.src='/images/Placeholder_Image.jpg';" />
 
                     <div class="album-main">
                         <div class="album-title">@album.Title</div>
@@ -389,7 +389,7 @@
     // Populating search results
     private List<Song> songResults = new();
     private List<Album> albumResults = new();
-    private List<Song> artistResults = new(); //Intended 
+    private List<Song> artistResults = new(); //Intended
 
     // Boolean logic for pop up pages
     private bool showAddToPlaylistModal = false;
@@ -478,11 +478,11 @@
         showAddToPlaylistModal = true;
     }
 
-    private void CloseAddToPlaylistModal() { showAddToPlaylistModal = false; selectedSong = null;}
+    private void CloseAddToPlaylistModal() { showAddToPlaylistModal = false; selectedSong = null; }
 
-    private void CloseCreatePlaylistModal() { showCreatePlaylistModal = false;}
+    private void CloseCreatePlaylistModal() { showCreatePlaylistModal = false; }
 
-    private void OpenCreatePlaylistModal() { showAddToPlaylistModal = false; showCreatePlaylistModal = true;}
+    private void OpenCreatePlaylistModal() { showAddToPlaylistModal = false; showCreatePlaylistModal = true; }
 
     private async Task SavePlaylist()
     {

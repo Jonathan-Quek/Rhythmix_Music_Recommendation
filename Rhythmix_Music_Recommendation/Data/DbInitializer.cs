@@ -107,16 +107,16 @@ namespace Rhythmix_Music_Recommendation.Data
 
                 await Task.Delay(1000);
 
-                }
-                await context.SaveChangesAsync();
-
-
-
             }
+            await context.SaveChangesAsync();
+
 
 
         }
+
+
     }
+}
 
 
 

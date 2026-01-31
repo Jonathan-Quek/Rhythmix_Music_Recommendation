@@ -10,10 +10,6 @@ namespace Rhythmix_Music_Recommendation.Data
 {
     public class Rhythmix_Music_RecommendationContext(DbContextOptions<Rhythmix_Music_RecommendationContext> options) : IdentityDbContext<Rhythmix_Music_RecommendationUser>(options)
     {
-        // Your existing Login/Register tables
-        public DbSet<StaffLogin> StaffLogin { get; set; } = default!;
-        public DbSet<UserLogin> UserLogin { get; set; } = default!;
-        public DbSet<UserRegister> UserRegister { get; set; } = default!;
 
         public DbSet<Rhythmix_Music_Recommendation.Components.Domain.Song> Songs { get; set; } = default!;
         public DbSet<Rhythmix_Music_Recommendation.Components.Domain.Album> Albums { get; set; } = default!;

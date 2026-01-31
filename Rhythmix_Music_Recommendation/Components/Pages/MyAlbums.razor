@@ -1,15 +1,25 @@
 ﻿@page "/my-albums"
+
+@* Import services and domain models used by this page *@
 @using Rhythmix_Music_Recommendation.Services
 @using Rhythmix_Music_Recommendation.Components.Domain
+
+@* Enable interactive server-side rendering *@
 @rendermode InteractiveServer
+
+@* Inject the scoped data service that stores albums *@
 @inject MusicDataService DataService
 
 <PageTitle>My Albums</PageTitle>
 
+@* Main page container *@
 <div style="margin-top: 10px; padding: 40px; font-family: sans-serif;">
     <h1 style="border-bottom: 2px solid #1DB954; padding-bottom: 10px;">My Albums</h1>
 
-    @* Check if the private list is empty for this specific user/session *@
+    @* 
+       If there are no albums for this user/session,
+       display an empty-state message
+    *@
     @if (DataService.Albums == null || !DataService.Albums.Any())
     {
         <div style="margin-top: 50px; text-align: center; color: #555;">
@@ -20,19 +30,24 @@
     }
     else
     {
+        @* Responsive grid for album cards *@
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; margin-top: 30px;">
             @foreach (var album in DataService.Albums)
             {
+                @* Individual album card *@
                 <div class="album-card" style="background: #121212; color: white; padding: 15px; border-radius: 8px; position: relative;">
+
+                    @* Floating edit/delete action buttons *@
                     <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 5px; z-index: 10;">
-                        @* Edit Button - Green *@
+
+                        @* Edit album button *@
                         <button @onclick="() => PrepareEdit(album)"
                                 style="background: #1DB954; border: none; color: white; border-radius: 4px; padding: 5px; cursor: pointer;"
                                 title="Edit Album">
                             <i class="fa fa-pencil"></i>
                         </button>
 
-                        @* Delete Button - Red *@
+                        @* Delete album button *@
                         <button @onclick="() => HandleDelete(album.AlbumId)"
                                 style="background: #dc3545; border: none; color: white; border-radius: 4px; padding: 5px; cursor: pointer;"
                                 title="Delete Album">
@@ -40,6 +55,7 @@
                         </button>
                     </div>
 
+                    @* Album cover image container *@
                     <div style="width: 100%; aspect-ratio: 1/1;
                                 background: #282828;
                                 display: flex; justify-content: center; align-items: center;
@@ -50,26 +66,44 @@
                         }
                         else
                         {
+                            @* Placeholder icon when no cover image exists *@
                             <i class="fa fa-music" style="font-size: 50px; color: #777;"></i>
                         }
                     </div>
 
-                    <h4 style="margin-top: 15px; margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">@album.Title</h4>
-                    <p style="color: #1DB954; font-weight: bold; margin: 0;">@album.Artist</p>
-                    <p style="color: #888; font-size: 0.8rem; margin-top: 5px; height: 2.4em; overflow: hidden;">@album.Bio</p>
+                    @* Album title *@
+                    <h4 style="margin-top: 15px; margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        @album.Title
+                    </h4>
+
+                    @* Artist name *@
+                    <p style="color: #1DB954; font-weight: bold; margin: 0;">
+                        @album.Artist
+                    </p>
+
+                    @* Short album description/bio *@
+                    <p style="color: #888; font-size: 0.8rem; margin-top: 5px; height: 2.4em; overflow: hidden;">
+                        @album.Bio
+                    </p>
                 </div>
             }
         </div>
     }
 </div>
 
-@* --- EDIT MODAL --- *@
+@* ================= EDIT ALBUM MODAL ================= *@
 @if (isEditing)
 {
+    @* Fullscreen modal overlay *@
     <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 1000;">
         <div style="background: white; padding: 30px; border-radius: 12px; width: 600px; color: black; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
-            <h3 style="margin-top: 0; color: #1DB954; border-bottom: 1px solid #eee; padding-bottom: 10px;">Edit Album Details</h3>
+
+            <h3 style="margin-top: 0; color: #1DB954; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                Edit Album Details
+            </h3>
+
             <header class="format">
+                @* Left column: cover image preview & upload controls *@
                 <div class="left-div">
                     <div style="margin-top: 10px; min-height: 40px; display: flex; justify-content: center; align-items: center;">
                         @if (!string.IsNullOrEmpty(editingAlbum.CoverImageUrl))
@@ -78,12 +112,12 @@
                         }
                         else
                         {
-
                             <img src="/images/Placeholder_Image.jpg" class="cover-image" />
                         }
                     </div>
 
-                    <div style=" justify-content: center">
+                    <div style="justify-content: center">
+                        @* Toggle between upload and clear image *@
                         @if (!string.IsNullOrEmpty(editingAlbum.CoverImageUrl))
                         {
                             <button class="custom-file-btn" @onclick="ClearCoverImage">Clear Image</button>
@@ -91,92 +125,108 @@
                         else
                         {
                             <label for="fileUpload" class="custom-file-btn">Upload Image</label>
-                            <InputFile id="fileUpload" OnChange="HandleImageUpload" accept="image/*" style="display:none;" />
+                            <InputFile id="fileUpload"
+                                       OnChange="HandleImageUpload"
+                                       accept="image/*"
+                                       style="display:none;" />
 
+                            @* Display upload error if one occurs *@
                             @if (!string.IsNullOrEmpty(uploadError))
                             {
                                 <div>@uploadError</div>
                             }
                         }
                     </div>
-
                 </div>
+
+                @* Right column: editable album fields *@
                 <div class="right-div">
 
                     <div style="margin-bottom: 15px;">
                         <label style="display: block; font-weight: bold; margin-bottom: 5px;">Name</label>
-                        <input @bind="editingAlbum.Title" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" />
+                        <input @bind="editingAlbum.Title"
+                               style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" />
                     </div>
 
                     <div style="margin-bottom: 20px;">
                         <label style="display: block; font-weight: bold; margin-bottom: 5px;">Artist</label>
-                        <textarea @bind="editingAlbum.Artist" style="width: 100%;  padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: none;"></textarea>
+                        <textarea @bind="editingAlbum.Artist"
+                                  style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: none;">
+                            </textarea>
                     </div>
 
                     <div style="margin-bottom: 20px;">
                         <label style="display: block; font-weight: bold; margin-bottom: 5px;">Description</label>
-                        <textarea @bind="editingAlbum.Bio" style="width: 100%; height: 100px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: none;"></textarea>
+                        <textarea @bind="editingAlbum.Bio"
+                                  style="width: 100%; height: 100px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: none;">
+                            </textarea>
                     </div>
 
+                    @* Modal action buttons *@
                     <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                        <button @onclick="() => isEditing = false" style="background: #ccc; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 0.85rem;">Cancel</button>
-                        <button @onclick="SaveChanges" style="background: #1DB954; color: white; border: none; font-size: 0.85rem; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold;">Save Changes</button>
+                        <button @onclick="() => isEditing = false"
+                                style="background: #ccc; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 0.85rem;">
+                            Cancel
+                        </button>
+
+                        <button @onclick="SaveChanges"
+                                style="background: #1DB954; color: white; border: none; font-size: 0.85rem; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                            Save Changes
+                        </button>
                     </div>
                 </div>
             </header>
-            @* <div style="margin-top: 20px;"> *@
-            @*     <label style="display: block; margin-bottom: 5px; font-weight: bold;">Album Title</label> *@
-            @*     <input @bind="editingAlbum.Title" style="width: 100%; margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" placeholder="Title" /> *@
-
-            @*     <label style="display: block; margin-bottom: 5px; font-weight: bold;">Artist Name</label> *@
-            @*     <input @bind="editingAlbum.Artist" style="width: 100%; margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" placeholder="Artist" /> *@
-
-            @*     <label style="display: block; margin-bottom: 5px; font-weight: bold;">Bio / Description</label> *@
-            @*     <textarea @bind="editingAlbum.Bio" style="width: 100%; height: 100px; margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: none;" placeholder="Bio"></textarea> *@
-            @* </div> *@
-
-            @* <div style="display: flex; gap: 10px; justify-content: flex-end;"> *@
-            @*     <button @onclick="() => isEditing = false" style="background: #f0f0f0; color: #333; border: none; padding: 10px 25px; border-radius: 500px; cursor: pointer; font-weight: bold;">Cancel</button> *@
-            @*     <button @onclick="SaveChanges" style="background: #1DB954; color: white; border: none; padding: 10px 25px; border-radius: 500px; cursor: pointer; font-weight: bold;">Save Changes</button> *@
-            @* </div> *@
         </div>
     </div>
 }
 
 @code {
+    // Controls whether the edit modal is visible
     private bool isEditing = false;
+
+    // Clone of the album currently being edited
     private Album editingAlbum = new();
+
+    // Uploaded image reference
     private IBrowserFile? uploadedImage;
+
+    // Error message for image upload failures
     private string uploadError = "";
 
-
+    // Prepare album for editing by cloning it
     private void PrepareEdit(Album a)
     {
-        // Creating a clone so the UI doesn't update until 'Save' is clicked
+        // Clone prevents live UI updates before saving
         editingAlbum = new Album
-        {
-            AlbumId = a.AlbumId,
-            Title = a.Title,
-            Artist = a.Artist,
-            Bio = a.Bio,
-            CoverImageUrl = a.CoverImageUrl
-        };
+            {
+                AlbumId = a.AlbumId,
+                Title = a.Title,
+                Artist = a.Artist,
+                Bio = a.Bio,
+                CoverImageUrl = a.CoverImageUrl
+            };
+
         isEditing = true;
     }
 
+    // Persist album changes to the data service
     private void SaveChanges()
     {
         DataService.UpdateAlbum(editingAlbum);
         isEditing = false;
+
+        // Force UI refresh
         StateHasChanged();
     }
 
+    // Delete album from the data service
     private void HandleDelete(Guid id)
     {
         DataService.DeleteAlbum(id);
         StateHasChanged();
     }
 
+    // Handle album cover image upload
     private async Task HandleImageUpload(InputFileChangeEventArgs e)
     {
         uploadError = "";
@@ -184,7 +234,7 @@
 
         try
         {
-            // Limit size (e.g., 2 MB)
+            // Enforce maximum file size (2MB)
             const long maxSize = 2 * 1024 * 1024;
             if (uploadedImage.Size > maxSize)
             {
@@ -192,19 +242,21 @@
                 return;
             }
 
-            // Build path
+            // Generate unique filename and paths
             var ext = Path.GetExtension(uploadedImage.Name);
             var fileName = $"{Guid.NewGuid()}{ext}";
-            var relative = Path.Combine("uploads", "album", fileName);            // web path: /uploads/playlists/{file}
+            var relative = Path.Combine("uploads", "album", fileName);
             var physical = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "album");
 
             Directory.CreateDirectory(physical);
             var physicalFile = Path.Combine(physical, fileName);
 
+            // Save file to disk
             using var stream = File.Create(physicalFile);
             await uploadedImage.OpenReadStream(maxSize).CopyToAsync(stream);
 
-            editingAlbum.CoverImageUrl = "/" + relative.Replace("\\", "/"); // normalize for web
+            // Store web-safe URL
+            editingAlbum.CoverImageUrl = "/" + relative.Replace("\\", "/");
         }
         catch (Exception ex)
         {
@@ -212,11 +264,13 @@
         }
     }
 
+    // Remove the album cover image
     private void ClearCoverImage()
     {
         editingAlbum.CoverImageUrl = null;
         uploadedImage = null;
         uploadError = "";
+
         StateHasChanged();
     }
 }

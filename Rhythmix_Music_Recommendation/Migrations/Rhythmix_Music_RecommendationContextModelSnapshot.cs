@@ -300,102 +300,6 @@ namespace Rhythmix_Music_Recommendation.Migrations
                     b.ToTable("Songs", (string)null);
                 });
 
-            modelBuilder.Entity("Rhythmix_Music_Recommendation.Components.Domain.StaffLogin", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("StaffLogin", (string)null);
-                });
-
-            modelBuilder.Entity("Rhythmix_Music_Recommendation.Components.Domain.UserLogin", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UserLogin", (string)null);
-                });
-
-            modelBuilder.Entity("Rhythmix_Music_Recommendation.Components.Domain.UserRegister", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UserRegister", (string)null);
-                });
-
             modelBuilder.Entity("Rhythmix_Music_Recommendation.Data.Rhythmix_Music_RecommendationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -471,7 +375,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "74d7dc50-d3ef-4b64-a4f2-6eb35efd5cb0",
+                            ConcurrencyStamp = "0f9389cc-1e44-4cd9-8ea7-ea55dc724a0f",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -479,9 +383,9 @@ namespace Rhythmix_Music_Recommendation.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEM7rZxmGW1cm18Ndc3kHGj2ZIaj1BPc9rZYTyr+J9GWWzEsfVMlWj3iznMoyZ9Ruw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEI0vlbXxg2Al3seJzCUU8nN3AxFNQmB9wcf7qcn+EpM/syIuWvP89pi1fYhUWvh3QQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a1b99c2f-0b89-4345-90b3-33bd5f054071",
+                            SecurityStamp = "8afb39bb-1b2e-4fe3-aed6-014cf81b0474",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         },
@@ -489,7 +393,7 @@ namespace Rhythmix_Music_Recommendation.Migrations
                         {
                             Id = "b1a1f4c2-4f5e-4d3b-9c3a-1e2f3a4b5c6d",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "34442f92-4658-4868-9b83-4d9cc7fbcccb",
+                            ConcurrencyStamp = "7da7160a-ab20-43ea-af09-62acd3cbf697",
                             Email = "test@mail.com",
                             EmailConfirmed = true,
                             FirstName = "John",
@@ -497,9 +401,9 @@ namespace Rhythmix_Music_Recommendation.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "TEST@MAIL.COM",
                             NormalizedUserName = "TEST@MAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMOdccYp/ZnI9NkUNjj4BiXynKFbppo/lXVGq3bcjq9b4QlEMA9T0f+H7B9RxnBe1Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAED68I5vE+2JcjQuwOgwZqWp5aTE6cs71wEncqeG3VZcrbmb1WwocCn6j2VDM7WwIMQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6bc627db-659b-4d2a-9eb7-4d9b1041e0cc",
+                            SecurityStamp = "c8071278-8d6b-4bb3-bd41-450c15bfc134",
                             TwoFactorEnabled = false,
                             UserName = "test@mail.com"
                         });

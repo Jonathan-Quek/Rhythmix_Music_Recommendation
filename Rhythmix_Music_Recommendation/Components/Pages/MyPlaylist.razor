@@ -70,32 +70,32 @@
             <header class="format">
                 <div class="left-div">
                     <div style="margin-top: 10px; min-height: 40px; display: flex; justify-content: center; align-items: center;">
-                    @if (!string.IsNullOrEmpty(editingPlaylist.CoverImageUrl))
-                    {
-                        <img src="@editingPlaylist.CoverImageUrl" class="cover-image" />
-                    }
-                    else
-                    {
+                        @if (!string.IsNullOrEmpty(editingPlaylist.CoverImageUrl))
+                        {
+                            <img src="@editingPlaylist.CoverImageUrl" class="cover-image" />
+                        }
+                        else
+                        {
 
                             <img src="/images/Placeholder_Image.jpg" class="cover-image" />
-                    }
+                        }
                     </div>
 
                     <div style=" justify-content: center">
-                    @if (!string.IsNullOrEmpty(editingPlaylist.CoverImageUrl))
-                    {
-                        <button class="custom-file-btn" @onclick="ClearCoverImage">Clear Image</button>
-                    }
-                    else
-                    {
-                        <label for="fileUpload" class="custom-file-btn">Upload Image</label>
-                        <InputFile id="fileUpload" OnChange="HandleImageUpload" accept="image/*" style="display:none;" />
-
-                        @if (!string.IsNullOrEmpty(uploadError))
+                        @if (!string.IsNullOrEmpty(editingPlaylist.CoverImageUrl))
                         {
-                            <div>@uploadError</div>
+                            <button class="custom-file-btn" @onclick="ClearCoverImage">Clear Image</button>
                         }
-                    }
+                        else
+                        {
+                            <label for="fileUpload" class="custom-file-btn">Upload Image</label>
+                            <InputFile id="fileUpload" OnChange="HandleImageUpload" accept="image/*" style="display:none;" />
+
+                            @if (!string.IsNullOrEmpty(uploadError))
+                            {
+                                <div>@uploadError</div>
+                            }
+                        }
                     </div>
 
                 </div>
@@ -118,7 +118,7 @@
                 </div>
             </header>
 
-            
+
         </div>
     </div>
 }
@@ -159,12 +159,12 @@
     {
         // We create a "Clone" so changes don't show on the main page until we hit Save
         editingPlaylist = new Playlist
-        {
-            PlaylistId = p.PlaylistId,
-            Title = p.Title,
-            Description = p.Description,
-            CoverImageUrl = p.CoverImageUrl
-        };
+            {
+                PlaylistId = p.PlaylistId,
+                Title = p.Title,
+                Description = p.Description,
+                CoverImageUrl = p.CoverImageUrl
+            };
         isEditing = true;
     }
 

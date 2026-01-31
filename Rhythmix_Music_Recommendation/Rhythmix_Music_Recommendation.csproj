@@ -7,7 +7,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Components\Pages\StaffLoginPages\**" />
+    <Compile Remove="Components\Pages\UserLoginPages\**" />
+    <Compile Remove="Components\Pages\UserRegisterPages\**" />
+    <Content Remove="Components\Pages\StaffLoginPages\**" />
+    <Content Remove="Components\Pages\UserLoginPages\**" />
+    <Content Remove="Components\Pages\UserRegisterPages\**" />
+    <EmbeddedResource Remove="Components\Pages\StaffLoginPages\**" />
+    <EmbeddedResource Remove="Components\Pages\UserLoginPages\**" />
+    <EmbeddedResource Remove="Components\Pages\UserRegisterPages\**" />
+    <None Remove="Components\Pages\StaffLoginPages\**" />
+    <None Remove="Components\Pages\UserLoginPages\**" />
+    <None Remove="Components\Pages\UserRegisterPages\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Components\Domain\BaseDomainModel.cs" />
     <Compile Remove="Components\Domain\Register.cs" />
+    <Compile Remove="Components\Domain\StaffLogin.cs" />
+    <Compile Remove="Components\Domain\UserLogin.cs" />
+    <Compile Remove="Components\Domain\UserRegister.cs" />
     <Compile Remove="Migrations\20251211061223_Initial.cs" />
     <Compile Remove="Migrations\20251211061223_Initial.Designer.cs" />
     <Compile Remove="Migrations\20251212061940_Userregister.cs" />
@@ -66,7 +85,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Components\Account\Pages\AddPlaylists.razor" />
+    <Content Remove="Components\Account\Pages\EditPlaylists.razor" />
+    <Content Remove="Components\Account\Pages\ViewPlaylists.razor" />
     <Content Remove="Components\Layout\BottomNavMenu.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Components\Account\Pages\AddPlaylists.razor.css" />
+    <None Remove="Components\Account\Pages\EditPlaylists.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
