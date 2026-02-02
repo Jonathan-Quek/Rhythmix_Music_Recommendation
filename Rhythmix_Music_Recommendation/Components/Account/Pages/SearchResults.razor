@@ -323,6 +323,8 @@
         </div>
     }
 
+    <div style="height: 90px;"></div>
+
 
 </div>
 
@@ -709,7 +711,6 @@
 
             case SearchMode.Artists:
                 // Implement artist search logic here
-                // Get all songs matching the artist or genre
                 var preFilteredArtists = DbContext.Songs
                     .Where(s =>
                         (s.Artist != null && EF.Functions.Like(s.Artist, $"%{q}%")) ||

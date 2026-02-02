@@ -23,7 +23,7 @@ namespace Rhythmix_Music_Recommendation.Data
                 "SMSS/1.0 (jonathanquek14@hotmail.com)"
             );
 
-            var lim = 1;
+            var lim = 3;
 
             var genreSeeds = new Dictionary<string, int>
             {
