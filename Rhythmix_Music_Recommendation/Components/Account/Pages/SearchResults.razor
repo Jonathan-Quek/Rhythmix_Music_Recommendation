@@ -75,7 +75,7 @@
                     <div style="display:flex; gap:12px; align-items:center;">
                         <img src="@selectedSong.CoverImageUrl"
                              onerror="this.onerror=null;this.src='/images/Placeholder_Image.jpg';"
-                             style="width:48px;height:48px;border-radius:6px;object-fit:cover;" />
+                             class="song-cover" />
 
                         <div style="min-width:0;">
                             <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
@@ -152,7 +152,7 @@
 
                             @if (!string.IsNullOrEmpty(P_coverImageUrl))
                             {
-                                <img src="@P_coverImageUrl" class="cover-image" />
+                                <img src="@P_coverImageUrl" class="song-cover" />
                             }
                             else
                             {

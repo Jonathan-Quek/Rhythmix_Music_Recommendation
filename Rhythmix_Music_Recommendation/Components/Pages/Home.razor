@@ -199,15 +199,18 @@
 }
 
 @code {
+    // Playlist Model Variables
     private bool showPlaylistModal = false;
     private string playlistName = "";
     private string playlistDesc = "";
 
+    // Album Model Variables
     private bool showAlbumModal = false;
     private string albumName = "";
     private string albumArtist = "";
     private string albumDesc = "";
 
+    // Image Upload Variables
     private string uploadError = "";
     private string? P_coverImageUrl;
     private string? A_coverImageUrl;
@@ -215,6 +218,8 @@
 
     private string saveMessage = "";
 
+
+    // Functions to open/close modals
     private void OpenPlaylistModal() { showPlaylistModal = true; }
     private void ClosePlaylistModal() { showPlaylistModal = false; }
     private void OpenAlbumModal() { showAlbumModal = true; }

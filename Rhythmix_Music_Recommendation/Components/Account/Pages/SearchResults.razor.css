@@ -42,6 +42,17 @@
         color: #fff;
     }
 
+.song-cover,
+.album-cover {
+    width: 64px;
+    height:64px;
+
+}
+.cover-image {
+    width: 180px;
+    height: 180px;
+}
+
 
 .album-list {
     display: flex;

@@ -64,7 +64,7 @@ namespace Rhythmix_Music_Recommendation.Data
                     var artist = release.GetProperty("artist-credit")[0].GetProperty("name").GetString();
                     var coverUrl = $"https://coverartarchive.org/release/{albumId}/front";
 
-                    // Fetch tracks for this album
+                    // Fetch songs for this album
                     var tracksUrl = $"http://musicbrainz.org/ws/2/recording?release={albumId}&fmt=json&inc=artist-credits";
                     var tracksResponse = await client.GetStringAsync(tracksUrl);
                     using var tracksDoc = JsonDocument.Parse(tracksResponse);
